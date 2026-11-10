@@ -1,0 +1,2114 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="C++ screening practice: editable code with Run buttons.">
+<meta name="theme-color" content="#FFCC00">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="C++ Notes">
+<title>mthree C++ Cram</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Barlow+Condensed:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#F4F5F2; --surface:#FFFFFF; --surface-2:#ECEDE8; --fg:#15171A; --muted:#5B6168; --line:#D9DBD6;
+  --sign:#FFCC00; --ink:#111111; --link:#1F5FBF;
+  --badge-bg:#111111; --badge-fg:#FFCC00;
+  --code-bg:#14171C; --code-fg:#E8E6DF;
+  --pass-ink:#1E6B41; --fail-ink:#B0302A;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4;
+  --grid:#e1e0d9; --axis:#c3c2b7;
+  --display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0F1114; --surface:#171A1F; --surface-2:#1E2228; --fg:#E9EAE6; --muted:#A3A9B0; --line:#2B3038;
+    --link:#7FB0FF; --badge-bg:#FFCC00; --badge-fg:#111111;
+    --pass-ink:#5BC88A; --fail-ink:#FF7A70;
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181;
+    --grid:#2c2c2a; --axis:#383835;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0F1114; --surface:#171A1F; --surface-2:#1E2228; --fg:#E9EAE6; --muted:#A3A9B0; --line:#2B3038;
+  --link:#7FB0FF; --badge-bg:#FFCC00; --badge-fg:#111111;
+  --pass-ink:#5BC88A; --fail-ink:#FF7A70;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181;
+  --grid:#2c2c2a; --axis:#383835;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.6 var(--body)}
+body,.dg,.dg text,td,th,.board,.viz svg text{font-variant-ligatures:none;font-feature-settings:"liga" 0,"calt" 0}
+[hidden]{display:none!important}
+img,svg{max-width:100%}
+a{color:var(--link);text-underline-offset:2px}
+[id]{scroll-margin-top:64px}
+h1,h2,h3,h4{margin:0}
+p{margin:0 0 12px}
+ul,ol{margin:0 0 12px;padding-left:22px}
+li{margin:4px 0}
+b,strong{font-weight:700}
+.wrap{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* sign strip */
+.strip{background:var(--sign);color:var(--ink)}
+.strip .wrap{max-width:1180px;margin:0 auto;display:flex;flex-wrap:wrap;gap:6px 22px;align-items:center;min-height:42px;padding-top:9px;padding-bottom:8px;font:700 15px/1.1 var(--display);letter-spacing:.09em;text-transform:uppercase}
+.strip .arrow{font-size:20px;line-height:0}
+.strip .sep{opacity:.45}
+
+/* layout */
+.layout{display:grid;grid-template-columns:minmax(0,1fr);max-width:1180px;margin:0 auto}
+@media (min-width:1080px){.layout{grid-template-columns:210px minmax(0,1fr);gap:52px}}
+main{min-width:0;max-width:820px;padding-bottom:80px}
+
+/* nav */
+.toc{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none;margin:0 calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:8px max(16px,env(safe-area-inset-left,0px))}
+.toc::-webkit-scrollbar{display:none}
+.toc ol{list-style:none;margin:0;padding:0;display:flex;gap:6px;white-space:nowrap}
+.toc li{margin:0}
+.toc a{display:flex;align-items:center;gap:8px;padding:6px 10px 6px 6px;border-radius:8px;color:var(--fg);text-decoration:none;font:700 16px/1 var(--display);letter-spacing:.04em;text-transform:uppercase}
+.toc a .g{display:inline-grid;place-items:center;min-width:24px;height:24px;border-radius:5px;background:var(--surface-2);color:var(--fg);font-size:14px;padding:0 4px}
+.toc a:hover{background:var(--surface-2)}
+.toc a.on .g{background:var(--sign);color:var(--ink)}
+.toc .toc-title{display:none}
+@media (min-width:1080px){
+  .toc{top:24px;align-self:start;margin:28px 0 0;padding:0;border:0;background:none;overflow:visible;max-height:calc(100vh - 48px)}
+  .toc ol{flex-direction:column;white-space:normal;gap:2px}
+  .toc a{padding:8px 10px 8px 8px;font-size:17px}
+  .toc .toc-title{display:block;font:700 13px/1 var(--display);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 10px 8px}
+}
+
+/* hero */
+.hero{padding:36px 0 8px}
+.kicker{font:700 15px/1 var(--display);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.hero h1{font:700 clamp(46px,9vw,88px)/.92 var(--display);text-transform:uppercase;letter-spacing:-.005em;margin:0 0 16px}
+.hero h1 span{background:var(--sign);color:var(--ink);padding:0 .12em;border-radius:6px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.lede{font-size:19px;max-width:60ch;margin-bottom:18px}
+
+/* departures board */
+.board{background:var(--code-bg);color:var(--code-fg);border-radius:14px;padding:4px 0;margin:22px 0 10px;font-family:var(--mono)}
+.board .row{display:grid;grid-template-columns:62px minmax(0,1fr) auto;gap:6px 14px;padding:12px 18px;border-bottom:1px solid #262B33;align-items:baseline}
+.board .row:last-child{border-bottom:0}
+.board .hd{color:#8B949E;font-size:12px;letter-spacing:.14em;text-transform:uppercase;padding-top:12px;padding-bottom:8px}
+.board .t{color:#FFCC00;font-weight:600;font-size:16px}
+.board .w{font-family:var(--body);font-size:16px;line-height:1.4}
+.board .s{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;white-space:nowrap}
+.s-cert{color:#5BC88A}.s-vl{color:#FFCC00}.s-l{color:#E8E6DF}.s-p{color:#8B949E}
+@media (max-width:560px){.board .row{grid-template-columns:44px minmax(0,1fr)}.board .s{grid-column:2}.board .hd .s{display:none}}
+
+.tline{display:flex;gap:3px;height:44px;margin:4px 0 6px}
+.tline div{display:grid;place-items:center;background:var(--surface);border:1px solid var(--line);border-radius:6px;font:700 15px/1 var(--display);letter-spacing:.04em;text-transform:uppercase;overflow:hidden;white-space:nowrap}
+.tline .hot{background:var(--sign);color:var(--ink);border-color:var(--sign)}
+.tline-note{font-size:14px;color:var(--muted)}
+
+/* sections */
+.sec{padding-top:64px}
+.sec-h{display:flex;align-items:center;gap:14px;font:700 clamp(32px,5.4vw,44px)/1 var(--display);text-transform:uppercase;letter-spacing:.01em;margin-bottom:10px}
+.gate{flex:none;display:inline-grid;place-items:center;width:1.2em;height:1.2em;border-radius:7px;background:var(--badge-bg);color:var(--badge-fg);font-size:.86em}
+.sec-h::after{content:"";flex:1;min-width:20px;height:6px;border-radius:3px;background:var(--sign)}
+.sec-sub{color:var(--muted);font-size:17.5px;margin-bottom:22px;max-width:62ch}
+h3.topic{font:700 28px/1.1 var(--display);margin:40px 0 10px;letter-spacing:.005em}
+h3.topic .n{color:var(--muted);margin-right:8px}
+h4.mini{font:700 19px/1.2 var(--display);text-transform:uppercase;letter-spacing:.06em;margin:22px 0 8px}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 20px 10px;margin:18px 0}
+.card > h3{font:700 27px/1.1 var(--display);margin:6px 0 10px}
+
+/* say this */
+.say{border-left:6px solid var(--sign);background:var(--surface-2);padding:12px 16px 14px;border-radius:0 12px 12px 0;margin:14px 0;font-size:17.5px}
+.say::before{content:"Say this";display:block;width:max-content;font:700 12.5px/1 var(--display);letter-spacing:.14em;text-transform:uppercase;background:var(--sign);color:var(--ink);padding:5px 8px 4px;border-radius:4px;margin-bottom:8px}
+.say[data-label]::before{content:attr(data-label)}
+
+.note{display:flex;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:14px 0;font-size:16.5px}
+.note .ic{flex:none;width:28px;height:28px;border-radius:6px;background:var(--badge-bg);color:var(--badge-fg);display:grid;place-items:center;font:700 17px/1 var(--display)}
+.note p:last-child{margin-bottom:0}
+
+/* code */
+code{font-family:var(--mono);font-size:.86em;font-variant-ligatures:none}
+p code,li code,td code,th code,.note code,.say code,figcaption code,summary code{background:var(--surface-2);border:1px solid var(--line);padding:1px 5px;border-radius:5px;white-space:nowrap}
+.say code{background:var(--surface)}
+code.wrapc{white-space:normal}
+pre.code{background:var(--code-bg);color:var(--code-fg);border-radius:10px;padding:14px 16px;margin:12px 0;overflow-x:auto;font:14px/1.6 var(--mono);font-variant-ligatures:none;tab-size:4}
+pre.code code{font-size:inherit;background:none;border:0;padding:0;white-space:pre}
+.hljs-keyword,.hljs-meta .hljs-keyword{color:#FFCC00}
+.hljs-type,.hljs-built_in{color:#6FE0D0}
+.hljs-string,.hljs-meta .hljs-string{color:#A8D982}
+.hljs-number,.hljs-literal{color:#F7A072}
+.hljs-comment{color:#8B949E}
+.hljs-meta{color:#D2A8FF}
+.hljs-title{color:#8FC1FF}
+.hljs-operator,.hljs-punctuation,.hljs-params,.hljs-variable{color:inherit}
+
+/* tables */
+.tbl-wrap{overflow-x:auto;margin:12px 0}
+.tbl{width:100%;border-collapse:collapse;font-size:16px;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.tbl th,.tbl td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl th{font:700 14px/1.2 var(--display);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--surface-2)}
+.tbl tr:last-child td{border-bottom:0}
+.tbl td.big{font:600 15px/1.4 var(--mono);font-variant-ligatures:none;white-space:nowrap}
+
+/* figures + diagrams */
+figure.fig{margin:18px 0;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 16px 14px}
+.fig-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.fig-scroll > svg,.fig-scroll > .viz{min-width:470px}
+figcaption{font-size:15px;color:var(--muted);margin-top:10px;line-height:1.5}
+figcaption b{color:var(--fg)}
+.dg{display:block;width:100%;height:auto;color:var(--fg);font-family:var(--mono)}
+.dg text{fill:currentColor;font-size:14px}
+.dg .t-sm{font-size:12px}
+.dg .t-lg{font-size:26px;font-weight:600}
+.dg .t-mid{font-size:18px;font-weight:600}
+.dg .t-res{font-size:15px;font-weight:600}
+.dg .t-code{font-size:15px;font-weight:600}
+.dg .t-head{font-family:var(--display);font-size:17px;font-weight:700;letter-spacing:.06em}
+.dg .t-muted{fill:var(--muted)}
+.dg .t-acc{fill:var(--link)}
+.dg .on-hl{fill:#111111}
+.dg .box{fill:var(--surface);stroke:currentColor;stroke-width:1.5}
+.dg .box-soft{fill:var(--surface-2);stroke:var(--line);stroke-width:1.5}
+.dg .box-hl{fill:var(--sign);stroke:#111111;stroke-width:1.5}
+.dg .frame{fill:var(--surface-2);stroke:var(--line);stroke-width:1.5}
+.dg .region{fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:6 5}
+.dg .stroke-only{fill:none;stroke:currentColor;stroke-width:1.5}
+.dg .ln{stroke:currentColor;stroke-width:1.5;fill:none}
+.dg .ln2{stroke:currentColor;stroke-width:2.5;fill:none;stroke-linejoin:round}
+.dg .ln-acc{stroke:var(--link);stroke-width:2;fill:none}
+.dg .ln-dash{stroke:var(--muted);stroke-width:1.5;fill:none;stroke-dasharray:5 4}
+.dg .ln-faint{stroke:var(--line);stroke-width:1.5}
+.dg .mk{fill:currentColor}
+.dg .mk-acc{fill:var(--link)}
+.dg .mk-muted{fill:var(--muted)}
+.dg .mk-hollow{fill:var(--surface);stroke:currentColor;stroke-width:1.3}
+.dg .dot{fill:currentColor}
+.dg .bar{fill:currentColor;opacity:.78}
+.dg .bar-x{fill:none;stroke:var(--muted);stroke-width:1.2;stroke-dasharray:3 3}
+.dg .bar-hl{fill:var(--sign);stroke:#111111;stroke-width:1}
+.dg .ck-ring{fill:var(--surface);stroke:var(--pass-ink);stroke-width:1.5}
+.dg .ck{fill:none;stroke:var(--pass-ink);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* fixes */
+.fix{display:grid;grid-template-columns:minmax(0,1fr);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:12px 0;background:var(--surface)}
+@media (min-width:720px){.fix{grid-template-columns:minmax(0,1fr) minmax(0,1.5fr)}}
+.fix > div{padding:13px 16px}
+.fix .was{background:var(--surface-2);color:var(--muted);font-size:16px}
+.fix .was::before,.fix .now::before{display:block;font:700 12.5px/1 var(--display);letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px}
+.fix .was::before{content:"Your notes"}
+.fix .now::before{content:"Sharper";color:var(--pass-ink)}
+.fix p:last-child,.fix ul:last-child{margin-bottom:0}
+.fix pre.code{margin:8px 0 4px}
+
+/* grading tiles + pillars */
+.tiles{display:grid;grid-template-columns:1fr;gap:10px;margin:14px 0}
+@media (min-width:640px){.tiles{grid-template-columns:repeat(3,1fr)}}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.tile b{display:block;font:700 22px/1.1 var(--display);text-transform:uppercase;letter-spacing:.02em;margin-bottom:4px}
+.tile span{color:var(--muted);font-size:15.5px}
+.pillars{display:grid;grid-template-columns:1fr;gap:12px;margin:14px 0}
+@media (min-width:680px){.pillars{grid-template-columns:1fr 1fr}}
+.pillar{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.pillar h4{display:flex;align-items:center;gap:10px;font:700 22px/1 var(--display);text-transform:uppercase;letter-spacing:.03em;margin-bottom:8px}
+.pillar h4 i{font-style:normal;display:inline-grid;place-items:center;width:30px;height:30px;border-radius:6px;background:var(--badge-bg);color:var(--badge-fg);font-size:19px}
+.pillar p{font-size:16.5px}
+.pillar .eg{color:var(--muted);font-size:15.5px}
+
+/* plan */
+.plan{display:grid;grid-template-columns:1fr;gap:14px;margin:16px 0}
+@media (min-width:720px){.plan{grid-template-columns:1fr 1fr}}
+.plan .col{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px 6px}
+.plan h4{font:700 20px/1.1 var(--display);text-transform:uppercase;letter-spacing:.05em;display:flex;justify-content:space-between;gap:8px;margin-bottom:6px}
+.plan h4 span{color:var(--muted);font-size:15px}
+.chk{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-top:1px solid var(--line);cursor:pointer;font-size:16px;line-height:1.45}
+.chk input{flex:none;width:22px;height:22px;margin:1px 0 0;accent-color:#e0b400;cursor:pointer}
+.chk .min{flex:none;font:700 14px/1 var(--display);letter-spacing:.04em;background:var(--surface-2);border-radius:5px;padding:5px 6px 4px;margin-top:1px}
+.chk input:checked ~ .txt{text-decoration:line-through;color:var(--muted)}
+.progress{display:flex;align-items:center;gap:12px;font:700 15px/1 var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.progress .bar{flex:1;height:8px;background:var(--surface-2);border-radius:4px;overflow:hidden;border:1px solid var(--line)}
+.progress .bar i{display:block;height:100%;width:0;background:var(--sign);transition:width .25s}
+
+/* compare */
+.compare{display:grid;grid-template-columns:1fr;gap:12px;margin:14px 0}
+@media (min-width:680px){.compare{grid-template-columns:1fr 1fr}}
+.compare > div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.compare h4{font:700 20px/1.1 var(--display);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+.compare p{font-size:16px}
+.basics{border:2px solid var(--sign);border-radius:14px;padding:16px;margin:16px 0 22px;background:var(--surface)}
+.basics .b-lbl{display:inline-block;font:700 13px/1 var(--display);letter-spacing:.14em;text-transform:uppercase;background:var(--sign);color:var(--ink);padding:6px 9px 5px;border-radius:4px;margin-bottom:12px}
+.basics h4{position:relative;padding-left:38px;min-height:28px;font:700 20px/1.35 var(--display);text-transform:uppercase;letter-spacing:.04em;margin:24px 0 4px}
+.basics h4 .st{position:absolute;left:0;top:0;display:grid;place-items:center;width:28px;height:28px;border-radius:6px;background:var(--badge-bg);color:var(--badge-fg);font-size:17px}
+.basics .tbl td.big{white-space:normal}
+.basics .tbl.kw td:first-child{width:42%}
+.basics h4 code{text-transform:none;font:600 .8em var(--mono);font-variant-ligatures:none;background:var(--surface-2);border:1px solid var(--line);padding:1px 6px;border-radius:5px}
+.basics > :last-child{margin-bottom:0}
+@media (max-width:560px){.basics{padding:14px 12px}}
+
+/* runner */
+.runner{margin:14px 0}
+.editor{position:relative;background:var(--code-bg);border-radius:10px;border:1px solid #262B33;overflow-x:auto;overscroll-behavior-x:contain}
+.ed-in{position:relative;width:max-content;min-width:100%}
+.editor:focus-within{outline:3px solid var(--sign);outline-offset:1px}
+.ed-hl,.ed-ta{margin:0;padding:14px 16px;font:14px/1.6 var(--mono);font-variant-ligatures:none;font-feature-settings:"liga" 0,"calt" 0;letter-spacing:0;white-space:pre;overflow-wrap:normal;word-break:normal;tab-size:4;border:0;text-align:left}
+.ed-hl{color:var(--code-fg);pointer-events:none;min-height:60px}
+.ed-hl code{font:inherit;background:none;border:0;padding:0;white-space:inherit}
+.ed-ta{position:absolute;inset:0;width:100%;height:100%;resize:none;background:transparent;color:transparent;-webkit-text-fill-color:transparent;caret-color:#FFCC00;outline:none;overflow:hidden;-webkit-appearance:none;appearance:none;border-radius:10px}
+.ed-ta::selection{background:rgba(255,204,0,.32)}
+@media (max-width:640px){.ed-hl,.ed-ta{font-size:16px;padding:12px}}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:42px;padding:10px 14px;border-radius:8px;border:1.5px solid var(--fg);background:transparent;color:var(--fg);font:700 15px/1 var(--display);letter-spacing:.07em;text-transform:uppercase;text-decoration:none;cursor:pointer}
+.btn:hover{background:var(--surface-2)}
+.btn.primary{background:var(--sign);border-color:var(--sign);color:var(--ink)}
+.btn.primary:hover{filter:brightness(.95)}
+.btn:disabled{opacity:.65;cursor:progress}
+.btn:focus-visible{outline:3px solid var(--link);outline-offset:2px}
+.kbd-hint{margin-left:auto;font-size:13px;color:var(--muted)}
+@media (max-width:640px){.kbd-hint{display:none}}
+.spin{width:14px;height:14px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.out{margin-top:10px;background:var(--code-bg);color:var(--code-fg);border-radius:10px;overflow:hidden;font:14px/1.55 var(--mono);font-variant-ligatures:none}
+.out-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 14px;background:#1E232B;font:700 15px/1.2 var(--display);letter-spacing:.08em;text-transform:uppercase}
+.out-head.pass{background:#1D4A31;color:#CDF3DC}
+.out-head.fail{background:#57201C;color:#FFDAD6}
+.out-head.warn{background:#4A3B0E;color:#FFEAA8}
+.out pre{margin:0;padding:12px 14px;white-space:pre-wrap;overflow-wrap:anywhere;font:inherit}
+.out .row-pass{color:#5BC88A}.out .row-fail{color:#FF8A80}.out .row-err{color:#FFB4AB}.out .dim{color:#8B949E}
+.out-body{padding:12px 14px;font-family:var(--body);font-size:15.5px;line-height:1.5}
+.out-body p{margin:0 0 10px}
+.out-body .btn{border-color:#FFCC00}
+.out-foot{padding:7px 14px;font-size:12px;color:#8B949E;border-top:1px solid #262B33;font-family:var(--body)}
+.restored{font-size:13px;color:var(--muted);margin:6px 0 0}
+
+details.reveal{border:1px solid var(--line);border-radius:10px;margin:10px 0;background:var(--surface)}
+details.reveal > summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:10px;padding:11px 14px;font:700 15.5px/1.2 var(--display);letter-spacing:.07em;text-transform:uppercase}
+details.reveal > summary::-webkit-details-marker{display:none}
+details.reveal > summary::before{content:"";width:0;height:0;border-left:7px solid currentColor;border-top:5px solid transparent;border-bottom:5px solid transparent;transition:transform .15s}
+details.reveal[open] > summary::before{transform:rotate(90deg)}
+details.reveal > .body{padding:0 14px 12px}
+details.reveal > .body > :last-child{margin-bottom:0}
+
+.p-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.tag{display:inline-block;font:700 12.5px/1 var(--display);letter-spacing:.12em;text-transform:uppercase;padding:5px 8px 4px;border-radius:4px;background:var(--surface-2);border:1px solid var(--line);color:var(--muted)}
+.tag.hot{background:var(--sign);color:var(--ink);border-color:var(--sign)}
+.badge-done{display:none;font:700 12.5px/1 var(--display);letter-spacing:.12em;text-transform:uppercase;padding:5px 8px 4px;border-radius:4px;background:var(--pass-ink);color:var(--surface)}
+.problem.done .badge-done{display:inline-block}
+
+/* traps */
+.trap{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px 6px;margin:14px 0}
+.trap-h{display:flex;align-items:center;gap:10px;font:700 18px/1 var(--display);text-transform:uppercase;letter-spacing:.06em}
+.trap-h i{font-style:normal;display:inline-grid;place-items:center;width:28px;height:28px;border-radius:6px;background:var(--badge-bg);color:var(--badge-fg)}
+
+/* sql */
+.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:10px 0 16px}
+.chip{font:600 14px/1 var(--mono);font-variant-ligatures:none;padding:7px 10px;border-radius:6px;background:var(--code-bg);color:#FFCC00}
+.chips .sep{color:var(--muted);font-weight:700}
+.join-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0;align-items:start}
+@media (min-width:760px){.join-grid{grid-template-columns:repeat(4,1fr)}}
+.mini-t{font-size:14px}
+.jt-cap{font:700 14px/1.2 var(--display);letter-spacing:.08em;text-transform:uppercase;padding:0 0 6px;color:var(--fg)}
+.mini-t td,.mini-t th{padding:6px 8px;font-family:var(--mono);font-size:13px}
+.mini-t th{font-size:12px}
+.mini-t tr.hl td{background:var(--sign);color:var(--ink)}
+.mini-t td.null{color:var(--muted);font-style:italic}
+.mini-t tr.hl td.null{color:#5a4a00}
+.sqlpg{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;margin:18px 0}
+.sql-start{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center}
+.sql-start span{color:var(--muted);font-size:15px}
+.presets{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
+.presets button{font:600 13px/1 var(--mono);font-variant-ligatures:none;padding:8px 10px;border-radius:6px;border:1px solid var(--line);background:var(--surface-2);color:var(--fg);cursor:pointer}
+.presets button:hover,.presets button.on{background:var(--sign);color:var(--ink);border-color:var(--sign)}
+.sql-out{margin-top:10px}
+.sql-out .meta{font-size:13px;color:var(--muted);margin:6px 0}
+.sql-out .err{background:var(--code-bg);color:#FFB4AB;border-radius:8px;padding:10px 12px;font:14px/1.5 var(--mono);font-variant-ligatures:none}
+.sql-out td.null{color:var(--muted);font-style:italic}
+.sql-out .tbl td{font:14px/1.4 var(--mono);font-variant-ligatures:none}
+
+/* steps */
+.steps{list-style:none;padding:0;margin:14px 0;counter-reset:st}
+.steps li{counter-increment:st;display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:8px 0}
+.steps li::before{content:counter(st);display:grid;place-items:center;width:44px;height:44px;border-radius:8px;background:var(--badge-bg);color:var(--badge-fg);font:700 24px/1 var(--display)}
+.steps b{display:block;font:700 19px/1.2 var(--display);text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px}
+.steps span{font-size:16px;color:var(--muted)}
+.steps span q{color:var(--fg)}
+
+.cut{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.cut span{font-size:15px;padding:6px 10px;border-radius:6px;border:1px dashed var(--line);color:var(--muted);text-decoration:line-through;text-decoration-color:var(--fail-ink);background:var(--surface)}
+
+/* big-o chart */
+.viz{position:relative}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font:13px/1.3 var(--mono);font-variant-ligatures:none;color:var(--fg);margin:0 0 10px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{display:inline-block;width:16px;height:3px;border-radius:2px}
+.viz svg text{font-family:var(--body);font-size:12px;fill:var(--muted)}
+.viz svg .lbl{font-family:var(--mono);font-size:12.5px;fill:var(--fg)}
+.viz svg .gl{stroke:var(--grid);stroke-width:1}
+.viz svg .ax{stroke:var(--axis);stroke-width:1}
+.viz svg .sr{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.viz svg .xh{stroke:var(--muted);stroke-width:1;stroke-dasharray:3 3}
+.viz svg .hd{stroke:var(--surface);stroke-width:2}
+.tip{position:absolute;top:8px;pointer-events:none;background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font:13px/1.5 var(--body);box-shadow:0 6px 20px rgba(0,0,0,.14);min-width:168px;z-index:2}
+.tip .tn{font-weight:700;margin-bottom:2px}
+.tip .tr{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12.5px}
+.tip .tr i{width:10px;height:3px;border-radius:2px;flex:none}
+.tip .tr b{margin-left:auto;font-weight:600;font-variant-numeric:tabular-nums;padding-left:12px}
+.tip .off{color:var(--muted);font-weight:400}
+
+.local{display:grid;gap:4px;background:var(--code-bg);color:var(--code-fg);border-radius:12px;padding:14px 16px;margin:14px 0;font-size:15.5px}
+.local b{color:#FFCC00;font:700 16px/1.2 var(--display);letter-spacing:.08em;text-transform:uppercase}
+.local code{background:#262B33;border:0;color:#E8E6DF;white-space:nowrap}
+.local p{margin:0}
+
+footer.foot{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:14.5px}
+</style>
+
+<div class="strip"><div class="wrap">
+  <span><span class="arrow">→</span> Stage 2 · C++ technical screening</span>
+  <span class="sep">|</span><span>Wed 11 Nov 2026</span>
+  <span class="sep">|</span><span>30 min · Teams</span>
+</div></div>
+
+<div class="wrap"><div class="layout">
+
+<nav class="toc" aria-label="Sections">
+  <div class="toc-title">Gates</div>
+  <ol>
+    <li><a href="#overview"><span class="g">0</span>Overview</a></li>
+    <li><a href="#fixes"><span class="g">1</span>Note fixes</a></li>
+    <li><a href="#theory"><span class="g">2</span>Theory</a></li>
+    <li><a href="#oop"><span class="g">3</span>OOP code</a></li>
+    <li><a href="#coding"><span class="g">4</span>Live coding</a></li>
+    <li><a href="#traps"><span class="g">5</span>Chat traps</a></li>
+    <li><a href="#sql"><span class="g">6</span>SQL</a></li>
+    <li><a href="#call"><span class="g">7</span>On the call</a></li>
+    <li><a href="#cut"><span class="g">✂</span>Cut list</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<header class="hero">
+  <div class="kicker">mthree · Amadeus Heathrow · junior C++</div>
+  <h1>mthree <span>C++</span> Cram</h1>
+  <p class="lede">Everything a 30-minute trainee screening will realistically test, cut down to the essentials. Every code box on this page is editable and has a <b>Run</b> button, so you can practise right here (running code needs internet). The <a href="./">notes version</a> works fully offline.</p>
+</header>
+
+<section id="overview" class="sec" style="padding-top:28px">
+  <h2 class="sec-h"><span class="gate">0</span>Overview</h2>
+  <p class="sec-sub">What the 30 minutes probably looks like, what they're grading, and your two study sessions.</p>
+
+  <div class="tline" role="img" aria-label="Rough split of the 30 minutes: 5 intro, 10 theory, 10 live coding, about 3 chat snippets, about 2 SQL.">
+    <div style="flex:5">Intro</div>
+    <div style="flex:10">Theory</div>
+    <div class="hot" style="flex:10">Live code</div>
+    <div style="flex:3">Chat</div>
+    <div style="flex:2">SQL</div>
+  </div>
+  <div class="tline-note">Bar widths are minutes out of 30.</div>
+
+  <div class="board" role="table" aria-label="Likely interview schedule">
+    <div class="row hd" role="row"><span role="columnheader">Min</span><span role="columnheader">What happens</span><span class="s" role="columnheader">Status</span></div>
+    <div class="row" role="row"><span class="t">~5</span><span class="w">Intro: "why mthree, why C++?"</span><span class="s s-cert">Certain</span></div>
+    <div class="row" role="row"><span class="t">~10</span><span class="w">Spoken theory: OOP pillars, pointer vs reference, stack vs heap, pass by value vs reference</span><span class="s s-vl">Very likely</span></div>
+    <div class="row" role="row"><span class="t">~10</span><span class="w">Live coding: <b>one easy problem, written as a function</b></span><span class="s s-vl">Very likely</span></div>
+    <div class="row" role="row"><span class="t">few</span><span class="w">"What does this print?" snippets pasted in the Teams chat</span><span class="s s-l">Likely</span></div>
+    <div class="row" role="row"><span class="t">few</span><span class="w">1–3 SQL questions</span><span class="s s-p">Possible</span></div>
+  </div>
+
+  <h4 class="mini">What they're really grading</h4>
+  <p>mthree hires people with <i>zero</i> C++ and trains them. They're checking three things, and nothing clever:</p>
+  <div class="tiles">
+    <div class="tile"><b>Think logically</b><span>Break the problem into steps before typing.</span></div>
+    <div class="tile"><b>Explain out loud</b><span>Narrate the plan, the loop, the edge case.</span></div>
+    <div class="tile"><b>Write a function that runs</b><span>Simple and working beats clever and half-done.</span></div>
+  </div>
+
+  <h4 class="mini" id="plan">Your time plan</h4>
+  <div class="progress"><span id="plan-count">0 / 7 done</span><span class="bar"><i id="plan-bar"></i></span></div>
+  <div class="plan">
+    <div class="col">
+      <h4>Tuesday night <span>~60 min</span></h4>
+      <label class="chk"><input type="checkbox" data-plan="tue1"><span class="min">10m</span><span class="txt">Read <a href="#fixes">Note fixes</a> and <a href="#theory">Theory</a>. Say every "Say this" <b>out loud</b>.</span></label>
+      <label class="chk"><input type="checkbox" data-plan="tue2"><span class="min">15m</span><span class="txt">Type the two <a href="#oop">OOP snippets</a> from memory in the editor, then Run.</span></label>
+      <label class="chk"><input type="checkbox" data-plan="tue3"><span class="min">35m</span><span class="txt"><a href="#drill0">Drill 0</a>, then <a href="#p1">Problems 1</a> and <a href="#p2">2</a>. No peeking until you're stuck.</span></label>
+    </div>
+    <div class="col">
+      <h4>Wednesday morning <span>~60 min</span></h4>
+      <label class="chk"><input type="checkbox" data-plan="wed1"><span class="min">25m</span><span class="txt"><a href="#p3">Problems 3</a> and <a href="#p4">4</a>. Then redo whichever one was hardest.</span></label>
+      <label class="chk"><input type="checkbox" data-plan="wed2"><span class="min">10m</span><span class="txt"><a href="#traps">Chat traps</a>: guess first, then reveal.</span></label>
+      <label class="chk"><input type="checkbox" data-plan="wed3"><span class="min">15m</span><span class="txt"><a href="#sql">SQL</a>: run the 5 queries in the playground.</span></label>
+      <label class="chk"><input type="checkbox" data-plan="wed4"><span class="min">10m</span><span class="txt">Re-read the "Say this" lines, then do the <a href="#call">call setup</a>.</span></label>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 1 FIXES ===================== -->
+<section id="fixes" class="sec">
+  <h2 class="sec-h"><span class="gate">1</span>Note fixes</h2>
+  <p class="sec-sub">Your understanding is mostly right. These are the six places where the wording or syntax would cost you marks.</p>
+
+  <div class="fix">
+    <div class="was">"Headers: iostream, vector, string, using namespace?, algorithm, map? unordered map?"</div>
+    <div class="now"><p>The list is right. But <code>using namespace std;</code> is <b>not a header</b>: it's the line that lets you write <code>cout</code> instead of <code>std::cout</code>. <code>&lt;map&gt;</code> and <code>&lt;unordered_map&gt;</code> are two separate headers.</p></div>
+  </div>
+
+  <div class="fix">
+    <div class="was">Your <code>cplusplus.cpp</code> file</div>
+    <div class="now"><p>It has 2 bugs, exactly the kind that cost time live:</p>
+      <ul><li><code>endl</code> needs to be <code>std::endl</code>, because the file has no <code>using namespace std;</code></li>
+      <li><code>return 0:</code> must be <code>return 0;</code> (semicolon, not colon)</li></ul></div>
+  </div>
+
+  <div class="fix">
+    <div class="was">"int = 20, then ref&amp; = int or something, then ref* = 30 idk"</div>
+    <div class="now"><p>A reference <b>never</b> uses <code>*</code>. Your theory was right; this is the syntax:</p>
+<script type="text/plain" data-code="cpp">int x = 20;
+int& ref = x;     // ref is another name for x
+ref = 30;         // x is now 30 (no * needed)
+
+int* ptr = &x;    // ptr stores x's address
+*ptr = 40;        // x is now 40 (via ptr)</script></div>
+  </div>
+
+  <div class="fix">
+    <div class="was">"RAII... removes unused variables after they go out of scope"</div>
+    <div class="now"><p>Not quite. <b>An object grabs a resource in its constructor and releases it in its destructor</b>, so cleanup happens automatically when the object goes out of scope. Smart pointers are one example.</p></div>
+  </div>
+
+  <div class="fix">
+    <div class="was">"Encapsulation: bundling variables and functions together"</div>
+    <div class="now"><p>That's half. The other half is <b>hiding</b>: the data is <code>private</code> and can only be changed through <code>public</code> functions.</p></div>
+  </div>
+
+  <div class="fix">
+    <div class="was">"Polymorphism: allowing 1 function to be used by others in different ways"</div>
+    <div class="now"><p>Tighter: <b>"the same function call does different things depending on the actual object."</b></p></div>
+  </div>
+</section>
+
+<!-- ===================== 2 THEORY ===================== -->
+<section id="theory" class="sec">
+  <h2 class="sec-h"><span class="gate">2</span>Theory</h2>
+  <p class="sec-sub">Seven topics. Read the yellow "Say this" boxes <b>out loud</b> until they come out naturally. That's the answer you give.</p>
+
+  <h3 class="topic" id="t-ptr"><span class="n">2.1</span>Pointer vs reference</h3>
+  <p class="say">"A reference is an alias, another name for an existing variable. It must be set when it's created, it can't be null, and it can't be changed to refer to something else. A pointer is a variable that stores a memory address. It can be null, it can be re-pointed, and you use <code>*</code> to get at the value. I use references by default, especially for function parameters, and pointers when something might be null or needs to change what it points at."</p>
+
+  <figure class="fig">
+    <div class="fig-scroll">
+    <svg class="dg" viewBox="0 0 580 228" role="img" aria-label="x and ref are two names stuck on the same memory box, which holds 20 at address 0x1000. ptr is a separate box at address 0x2000 that stores 0x1000 and points to x.">
+      <defs><marker id="ptr-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" class="mk-acc"/></marker></defs>
+      <text x="140" y="54" text-anchor="middle" class="t-sm t-muted">address 0x1000</text>
+      <rect x="60" y="64" width="160" height="64" rx="6" class="box"/>
+      <text x="140" y="106" text-anchor="middle" class="t-lg">20</text>
+      <line x1="100" y1="128" x2="100" y2="150" class="ln"/>
+      <line x1="180" y1="128" x2="180" y2="150" class="ln"/>
+      <rect x="66" y="150" width="68" height="30" rx="15" class="box-hl"/>
+      <text x="100" y="170" text-anchor="middle" class="on-hl">x</text>
+      <rect x="146" y="150" width="68" height="30" rx="15" class="box-hl"/>
+      <text x="180" y="170" text-anchor="middle" class="on-hl">ref</text>
+      <text x="140" y="212" text-anchor="middle" class="t-sm t-muted">two names, one box</text>
+
+      <text x="440" y="54" text-anchor="middle" class="t-sm t-muted">address 0x2000</text>
+      <rect x="360" y="64" width="160" height="64" rx="6" class="box"/>
+      <text x="440" y="103" text-anchor="middle" class="t-mid">0x1000</text>
+      <line x1="440" y1="128" x2="440" y2="150" class="ln"/>
+      <rect x="406" y="150" width="68" height="30" rx="15" class="box-hl"/>
+      <text x="440" y="170" text-anchor="middle" class="on-hl">ptr</text>
+      <text x="440" y="212" text-anchor="middle" class="t-sm t-muted">its own box, holds an address</text>
+
+      <line x1="358" y1="96" x2="223" y2="96" class="ln-acc" marker-end="url(#ptr-a)"/>
+      <text x="290" y="86" text-anchor="middle" class="t-sm t-acc">points to</text>
+      <text x="290" y="116" text-anchor="middle" class="t-sm t-muted">*ptr follows it</text>
+    </svg>
+    </div>
+    <figcaption><b>A reference is a second name tag on the same box.</b> A pointer is a <i>different</i> box that holds the first box's address. That's why a pointer has its own address and can be re-pointed or null, and a reference can't. Run the code below and the printed addresses show exactly this.</figcaption>
+  </figure>
+
+  <div class="runner" data-kind="program" data-id="t-ptr">
+<script type="text/plain" data-role="code">#include <iostream>
+using namespace std;
+
+int main() {
+    int x = 20;
+    int& ref = x;      // ref is another name for x
+    ref = 30;          // x is now 30
+    cout << "x = " << x << endl;
+
+    int* ptr = &x;     // ptr stores x's address
+    *ptr = 40;         // follow the address, change x
+    cout << "x = " << x << endl;
+
+    cout << "&x   = " << &x << endl;    // x's address
+    cout << "&ref = " << &ref << endl;  // SAME address: it's an alias
+    cout << "ptr  = " << ptr << endl;   // ptr holds that address
+    cout << "&ptr = " << &ptr << endl;  // ptr's OWN address: different
+    return 0;
+}</script>
+  </div>
+
+  <p><b>The <code>&amp;</code> / <code>*</code> confusion.</b> Each symbol has two jobs, depending on where it sits:</p>
+  <div class="tbl-wrap"><table class="tbl">
+    <thead><tr><th>You write</th><th>Where</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td class="big">int&amp; r = x;</td><td>in a declaration</td><td><code>r</code> is a <b>reference</b> to x</td></tr>
+      <tr><td class="big">&amp;x</td><td>in front of a variable</td><td><b>address of</b> x</td></tr>
+      <tr><td class="big">int* p = &amp;x;</td><td>in a declaration</td><td><code>p</code> is a <b>pointer</b> to an int</td></tr>
+      <tr><td class="big">*p</td><td>in front of a pointer</td><td><b>dereference</b>: the value at that address</td></tr>
+      <tr><td class="big">p-&gt;name</td><td>pointer to an object</td><td>same as <code>(*p).name</code></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 class="topic" id="t-pass"><span class="n">2.2</span>Pass by value vs reference vs const reference</h3>
+  <div class="basics">
+    <span class="b-lbl">Start here: the basics</span>
+    <p><b>Do you need this? Yes.</b> Every coding problem on this page takes <code>const string&amp; s</code> or <code>const vector&lt;int&gt;&amp; v</code>, and "pass by value vs reference" is one of the most likely theory questions. It builds up in three small steps.</p>
+
+    <h4><span class="st">1</span>By value: the function gets a copy</h4>
+<script type="text/plain" data-code="cpp">void setToTen(int x) {
+    x = 10;            // changes the COPY only
+}
+
+int main() {
+    int a = 5;
+    setToTen(a);
+    cout << a;         // prints 5: a never changed
+}</script>
+    <p>This is the default. <code>x</code> is a brand-new variable that starts as a copy of <code>a</code>. Whatever the function does to <code>x</code>, <code>a</code> is untouched.</p>
+
+    <h4><span class="st">2</span>Add <code>&amp;</code>: by reference, no copy</h4>
+<script type="text/plain" data-code="cpp">void setToTen(int& x) {   // the only change is the &
+    x = 10;                // x IS a, so a changes
+}
+
+int main() {
+    int a = 5;
+    setToTen(a);
+    cout << a;             // prints 10
+}</script>
+    <p><code>int&amp; x</code> means "<code>x</code> is another name for whatever was passed in". Nothing is copied, and changes go straight to the original.</p>
+
+    <h4><span class="st">3</span>Add <code>const</code>: no copy, and read-only</h4>
+<script type="text/plain" data-code="cpp">void printName(const string& name) {
+    cout << name;          // reading it: fine
+    // name = "Bob";       // COMPILE ERROR: const means you can't change it
+}</script>
+    <p>Why bother? Copying a long string or a big vector costs time and memory. The <code>&amp;</code> skips the copy, and <code>const</code> promises the function won't change the original. So for anything you only <b>read</b>, write <code>const Type&amp;</code>.</p>
+
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>You want to…</th><th>Write</th></tr></thead>
+      <tbody>
+        <tr><td>Use a small value: <code>int</code>, <code>double</code>, <code>char</code>, <code>bool</code></td><td class="big">int n</td></tr>
+        <tr><td>Change the caller's variable</td><td class="big">int&amp; x</td></tr>
+        <tr><td>Read a string, vector or object without copying it</td><td class="big">const string&amp; s</td></tr>
+      </tbody>
+    </table></div>
+    <p><b>Rule for the coding problems:</b> <code>int n</code> for numbers, <code>const string&amp; s</code> for text, <code>const vector&lt;int&gt;&amp; v</code> for lists. That covers every problem on this page.</p>
+  </div>
+  <p><b>Now the interview version</b>, built on those three steps:</p>
+  <p class="say">"Pass by value copies the argument, so changes inside the function don't affect the original. Pass by reference passes the original itself, so changes do affect it and nothing is copied. For big things like strings and vectors that I only need to read, I use <code>const&amp;</code>: no copy, and the compiler stops me changing it by accident."</p>
+
+  <figure class="fig">
+    <div class="fig-scroll">
+    <svg class="dg" viewBox="0 0 580 222" role="img" aria-label="Comparison. byValue: a stays 5 because x is a separate copy that becomes 99. byRef: x is a second name for a, so setting x to 99 makes a 99.">
+      <defs><marker id="pbv-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L9,5 L0,9 z" class="mk-muted"/></marker></defs>
+      <line x1="290" y1="8" x2="290" y2="214" class="ln-faint"/>
+      <text x="140" y="26" text-anchor="middle" class="t-code">byValue(a)</text>
+      <text x="140" y="46" text-anchor="middle" class="t-sm t-muted">void byValue(int x)</text>
+      <rect x="24" y="66" width="92" height="56" rx="6" class="box"/>
+      <text x="70" y="103" text-anchor="middle" class="t-lg">5</text>
+      <rect x="164" y="66" width="92" height="56" rx="6" class="box"/>
+      <text x="210" y="103" text-anchor="middle" class="t-lg">99</text>
+      <line x1="118" y1="94" x2="161" y2="94" class="ln-dash" marker-end="url(#pbv-a)"/>
+      <text x="140" y="86" text-anchor="middle" class="t-sm t-muted">copy</text>
+      <line x1="70" y1="122" x2="70" y2="140" class="ln"/>
+      <rect x="48" y="140" width="44" height="28" rx="14" class="box-hl"/>
+      <text x="70" y="159" text-anchor="middle" class="on-hl">a</text>
+      <line x1="210" y1="122" x2="210" y2="140" class="ln"/>
+      <rect x="188" y="140" width="44" height="28" rx="14" class="box-hl"/>
+      <text x="210" y="159" text-anchor="middle" class="on-hl">x</text>
+      <text x="140" y="190" text-anchor="middle" class="t-sm t-muted">x is a separate copy</text>
+      <text x="140" y="212" text-anchor="middle" class="t-res">a is still 5</text>
+
+      <text x="440" y="26" text-anchor="middle" class="t-code">byRef(a)</text>
+      <text x="440" y="46" text-anchor="middle" class="t-sm t-muted">void byRef(int&amp; x)</text>
+      <rect x="394" y="66" width="92" height="56" rx="6" class="box"/>
+      <text x="440" y="103" text-anchor="middle" class="t-lg">99</text>
+      <line x1="418" y1="122" x2="418" y2="140" class="ln"/>
+      <line x1="462" y1="122" x2="462" y2="140" class="ln"/>
+      <rect x="398" y="140" width="40" height="28" rx="14" class="box-hl"/>
+      <text x="418" y="159" text-anchor="middle" class="on-hl">a</text>
+      <rect x="442" y="140" width="40" height="28" rx="14" class="box-hl"/>
+      <text x="462" y="159" text-anchor="middle" class="on-hl">x</text>
+      <text x="440" y="190" text-anchor="middle" class="t-sm t-muted">x is another name for a</text>
+      <text x="440" y="212" text-anchor="middle" class="t-res">a is now 99</text>
+    </svg>
+    </div>
+    <figcaption><b>By value makes a copy; by reference hands over the original.</b> Same name-tag idea as 2.1: <code>int&amp; x</code> is just a reference used as a parameter.</figcaption>
+  </figure>
+
+  <div class="runner" data-kind="program" data-id="t-pass">
+<script type="text/plain" data-role="code">#include <iostream>
+#include <string>
+using namespace std;
+
+void byValue(int x)            { x = 99; }   // changes a COPY
+void byRef(int& x)             { x = 99; }   // changes the ORIGINAL
+void readOnly(const string& s) { cout << s << endl; } // no copy, can't modify
+
+int main() {
+    int a = 5;
+    byValue(a);
+    cout << "after byValue: a = " << a << endl;   // 5
+    byRef(a);
+    cout << "after byRef:   a = " << a << endl;   // 99
+    readOnly("const& = fast and safe");
+    return 0;
+}</script>
+  </div>
+
+  <h3 class="topic" id="t-mem"><span class="n">2.3</span>Stack vs heap</h3>
+  <p class="say">"The stack holds local variables and function calls. It's fast, automatic and limited in size: when a function ends at its closing brace, everything it put on the stack is freed. The heap is a big pool for memory you ask for at runtime with <code>new</code>. Use it when you don't know the size in advance or the data has to outlive the function. It's slower and it isn't freed automatically: you have to <code>delete</code> it, or use a smart pointer that does it for you."</p>
+
+  <figure class="fig">
+    <div class="fig-scroll">
+    <svg class="dg" viewBox="0 0 580 300" role="img" aria-label="The stack holds demo's frame with a equals 5, p and sp; below it is main's frame. p and sp point to two int blocks on the heap. p's block is freed only by delete p; sp's block is freed automatically when sp dies.">
+      <defs><marker id="mem-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L9,5 L0,9 z" class="mk-acc"/></marker></defs>
+      <text x="140" y="24" text-anchor="middle" class="t-head">STACK</text>
+      <text x="140" y="44" text-anchor="middle" class="t-sm t-muted">fast · automatic · small</text>
+      <text x="445" y="24" text-anchor="middle" class="t-head">HEAP</text>
+      <text x="445" y="44" text-anchor="middle" class="t-sm t-muted">big · manual · slower</text>
+
+      <rect x="20" y="58" width="240" height="150" rx="8" class="frame"/>
+      <text x="34" y="80" class="t-sm" style="font-weight:600">demo()</text>
+      <rect x="34" y="92" width="212" height="30" rx="4" class="box"/>
+      <text x="48" y="112">a  = 5</text>
+      <rect x="34" y="130" width="212" height="30" rx="4" class="box"/>
+      <text x="48" y="150">p  = 0x7A0</text>
+      <rect x="34" y="168" width="212" height="30" rx="4" class="box"/>
+      <text x="48" y="188">sp = 0x7B0</text>
+      <rect x="20" y="216" width="240" height="40" rx="8" class="frame"/>
+      <text x="34" y="241" class="t-sm" style="font-weight:600">main()</text>
+      <text x="140" y="284" text-anchor="middle" class="t-sm t-muted">demo()'s frame is wiped at its }</text>
+
+      <rect x="320" y="58" width="250" height="198" rx="12" class="region"/>
+      <text x="380" y="84" class="t-sm t-muted">0x7A0</text>
+      <rect x="380" y="90" width="140" height="36" rx="4" class="box"/>
+      <text x="450" y="113" text-anchor="middle">int 5</text>
+      <text x="450" y="146" text-anchor="middle" class="t-sm t-muted">freed only by delete p</text>
+      <text x="380" y="180" class="t-sm t-muted">0x7B0</text>
+      <rect x="380" y="186" width="140" height="36" rx="4" class="box"/>
+      <text x="450" y="209" text-anchor="middle">int 5</text>
+      <text x="450" y="242" text-anchor="middle" class="t-sm t-muted">freed when sp dies (RAII)</text>
+      <text x="445" y="284" text-anchor="middle" class="t-sm t-muted">forget delete → memory leak</text>
+
+      <line x1="246" y1="145" x2="377" y2="109" class="ln-acc" marker-end="url(#mem-a)"/>
+      <line x1="246" y1="183" x2="377" y2="203" class="ln-acc" marker-end="url(#mem-a)"/>
+    </svg>
+    </div>
+    <figcaption><b>The pointer variables live on the stack; what they point to lives on the heap.</b> When <code>demo()</code> ends, <code>a</code>, <code>p</code> and <code>sp</code> vanish. The block <code>p</code> pointed to stays behind (a leak) unless you <code>delete</code> it. <code>sp</code> is a <code>unique_ptr</code>, so its destructor frees its block for you.</figcaption>
+  </figure>
+
+<script type="text/plain" data-code="cpp">#include <memory>
+
+void demo() {
+    int a = 5;                                // STACK: freed automatically at }
+    int* p = new int(5);                      // HEAP: stays until you delete it
+    delete p;                                 // manual cleanup (forget it = memory leak)
+    unique_ptr<int> sp = make_unique<int>(5); // HEAP, but freed automatically at } (RAII)
+}</script>
+  <ul>
+    <li><b>Memory leak:</b> you <code>new</code> something and never <code>delete</code> it. On a server that runs 24/7 (like Amadeus), small leaks pile up until it crashes.</li>
+    <li><b>Dangling pointer:</b> a pointer to memory that's already been freed, for example returning the address of a local variable (see <a href="#traps">trap 7</a>).</li>
+    <li><b>Don't mix up the names:</b> "the stack" (memory) is not the same as <code>std::stack</code> (the data structure). Both are LIFO, because function calls pile up and get popped off.</li>
+  </ul>
+
+  <h3 class="topic" id="t-raii"><span class="n">2.4</span>RAII and smart pointers</h3>
+  <p class="say">"RAII stands for Resource Acquisition Is Initialization. You tie a resource to an object: the constructor acquires it and the destructor releases it. When the object goes out of scope, even because of an exception, the cleanup happens automatically. Smart pointers are RAII for heap memory. <code>unique_ptr</code> has one owner and deletes the memory when it goes out of scope. <code>shared_ptr</code> can have many owners, keeps a count, and deletes when the count hits zero."</p>
+  <p>That's enough. For <code>weak_ptr</code>, just know it exists to break <code>shared_ptr</code> cycles.</p>
+
+  <h3 class="topic" id="t-oop"><span class="n">2.5</span>OOP: the 4 pillars</h3>
+  <p>One line each, then the example if they ask for one.</p>
+  <div class="pillars">
+    <div class="pillar"><h4><i>E</i>Encapsulation</h4><p class="say" data-label="Say this">"Bundling data and the functions that use it into a class, and <b>hiding</b> the data with <code>private</code>, so it can only be changed through controlled <code>public</code> functions."</p><p class="eg">E.g. a bank balance is private; you can only <code>deposit()</code>, which rejects negative amounts.</p></div>
+    <div class="pillar"><h4><i>A</i>Abstraction</h4><p class="say" data-label="Say this">"Showing only what the user needs and hiding how it works."</p><p class="eg">E.g. you call <code>car.start()</code> without knowing how the engine works.</p></div>
+    <div class="pillar"><h4><i>I</i>Inheritance</h4><p class="say" data-label="Say this">"A child class gets the data and functions of a parent class, so you reuse code."</p><p class="eg">E.g. <code>Dog</code> and <code>Cat</code> both inherit <code>name</code> from <code>Animal</code>.</p></div>
+    <div class="pillar"><h4><i>P</i>Polymorphism</h4><p class="say" data-label="Say this">"The same function call does different things depending on the object."</p><p class="eg">E.g. <code>speak()</code> on a Dog says Woof; on a Cat it says Meow.</p></div>
+  </div>
+
+  <p><b>Overloading vs overriding</b> (a common follow-up):</p>
+  <div class="compare">
+    <div><h4>Overloading</h4><p>Same function name, <b>different parameters</b>, in the same class. Picked at <b>compile time</b>.</p><p><code>add(int, int)</code> and <code>add(double, double)</code></p></div>
+    <div><h4>Overriding</h4><p>A child <b>redefines a parent's <code>virtual</code> function</b> with the same signature. Picked at <b>runtime</b>.</p><p><code>Dog::speak()</code> replaces <code>Animal::speak()</code></p></div>
+  </div>
+  <p><b><code>virtual</code></b> marks a function so that, when it's called through a parent pointer or reference, C++ runs the <b>child's</b> version. Without it, the parent's version runs. New to <code>virtual</code>? <a href="#oop-b">Gate 3B</a> builds it up in four small steps.</p>
+  <p><b>If they ask about abstract classes:</b> "A class with a pure virtual function, <code>virtual void f() = 0;</code>. You can't create objects of it, and children must implement that function. It's C++'s version of a Java interface."</p>
+
+  <h3 class="topic" id="t-ds"><span class="n">2.6</span>Data structures (theory only)</h3>
+  <figure class="fig">
+    <div class="fig-scroll">
+    <svg class="dg" viewBox="0 0 580 240" role="img" aria-label="A vector stores 4, 9, 2, 7 side by side, so v[2] is reached directly in O(1). A linked list stores nodes scattered in memory, each pointing to the next, ending in nullptr, so reaching item 2 means following arrows: O(n).">
+      <defs><marker id="ds-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L9,5 L0,9 z" class="mk"/></marker></defs>
+      <text x="20" y="22" class="t-head">VECTOR / ARRAY</text>
+      <rect x="20" y="34" width="70" height="44" class="box"/><text x="55" y="62" text-anchor="middle" class="t-mid">4</text>
+      <rect x="90" y="34" width="70" height="44" class="box"/><text x="125" y="62" text-anchor="middle" class="t-mid">9</text>
+      <rect x="160" y="34" width="70" height="44" class="box-hl"/><text x="195" y="62" text-anchor="middle" class="t-mid on-hl">2</text>
+      <rect x="230" y="34" width="70" height="44" class="box"/><text x="265" y="62" text-anchor="middle" class="t-mid">7</text>
+      <text x="55" y="96" text-anchor="middle" class="t-sm t-muted">[0]</text>
+      <text x="125" y="96" text-anchor="middle" class="t-sm t-muted">[1]</text>
+      <text x="195" y="96" text-anchor="middle" class="t-sm t-muted">[2]</text>
+      <text x="265" y="96" text-anchor="middle" class="t-sm t-muted">[3]</text>
+      <text x="324" y="54" class="t-sm">v[2]: jump straight to it</text>
+      <text x="324" y="76" class="t-res t-acc">O(1)</text>
+
+      <text x="20" y="140" class="t-head">LINKED LIST</text>
+      <rect x="20" y="152" width="86" height="40" rx="4" class="box"/><line x1="70" y1="152" x2="70" y2="192" class="ln"/><text x="45" y="178" text-anchor="middle" class="t-mid">4</text><circle cx="88" cy="172" r="4" class="dot"/>
+      <line x1="92" y1="172" x2="138" y2="172" class="ln" marker-end="url(#ds-a)"/>
+      <rect x="140" y="152" width="86" height="40" rx="4" class="box"/><line x1="190" y1="152" x2="190" y2="192" class="ln"/><text x="165" y="178" text-anchor="middle" class="t-mid">9</text><circle cx="208" cy="172" r="4" class="dot"/>
+      <line x1="212" y1="172" x2="258" y2="172" class="ln" marker-end="url(#ds-a)"/>
+      <rect x="260" y="152" width="86" height="40" rx="4" class="box"/><line x1="310" y1="152" x2="310" y2="192" class="ln"/><text x="285" y="178" text-anchor="middle" class="t-mid">2</text><circle cx="328" cy="172" r="4" class="dot"/>
+      <line x1="332" y1="172" x2="378" y2="172" class="ln" marker-end="url(#ds-a)"/>
+      <rect x="380" y="152" width="86" height="40" rx="4" class="box"/><line x1="430" y1="152" x2="430" y2="192" class="ln"/><text x="405" y="178" text-anchor="middle" class="t-mid">7</text><circle cx="448" cy="172" r="4" class="dot"/>
+      <line x1="452" y1="172" x2="494" y2="172" class="ln" marker-end="url(#ds-a)"/>
+      <text x="499" y="177" class="t-sm t-muted">nullptr</text>
+      <text x="20" y="224" class="t-sm t-muted">item [2]? start at the front and follow the arrows: <tspan class="t-acc" style="font-weight:600">O(n)</tspan></text>
+    </svg>
+    </div>
+    <figcaption><b>Vector: side by side, so any index is instant.</b> Linked list: each node holds its data plus a pointer (the dot) to the next node, so you have to walk. Inserting into the middle of a list is fast, because you only re-point two arrows.</figcaption>
+  </figure>
+  <p><b>Array vs vector:</b> an array has a fixed size. A <code>vector</code> grows with <code>push_back</code> and knows its own <code>.size()</code>. <b>Linked list:</b> you probably won't have to code one. Just recognise the node:</p>
+<script type="text/plain" data-code="cpp">struct Node {
+    int data;
+    Node* next;   // pointer to the next node (nullptr at the end)
+};</script>
+
+  <figure class="fig">
+    <div class="fig-scroll">
+    <svg class="dg" viewBox="0 0 580 222" role="img" aria-label="A stack is a pile: push and pop both happen at the top, so the last item in (3) comes out first. A queue is a line: push at the back, pop at the front, so the first item in (1) comes out first.">
+      <defs><marker id="sq-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L9,5 L0,9 z" class="mk"/></marker></defs>
+      <path d="M60,46 V170 H200 V46" class="ln2"/>
+      <rect x="72" y="136" width="116" height="28" rx="4" class="box"/><text x="130" y="155" text-anchor="middle">1</text>
+      <rect x="72" y="104" width="116" height="28" rx="4" class="box"/><text x="130" y="123" text-anchor="middle">2</text>
+      <rect x="72" y="72" width="116" height="28" rx="4" class="box-hl"/><text x="130" y="91" text-anchor="middle" class="on-hl">3</text>
+      <line x1="104" y1="6" x2="104" y2="64" class="ln" marker-end="url(#sq-a)"/>
+      <text x="96" y="30" text-anchor="end" class="t-sm">push</text>
+      <line x1="156" y1="64" x2="156" y2="8" class="ln" marker-end="url(#sq-a)"/>
+      <text x="164" y="30" class="t-sm">pop</text>
+      <text x="130" y="196" text-anchor="middle" class="t-head">STACK = LIFO</text>
+      <text x="130" y="214" text-anchor="middle" class="t-sm t-muted">last in, first out · plates</text>
+
+      <rect x="300" y="76" width="50" height="40" rx="4" class="box-hl"/><text x="325" y="101" text-anchor="middle" class="on-hl">1</text>
+      <rect x="354" y="76" width="50" height="40" rx="4" class="box"/><text x="379" y="101" text-anchor="middle">2</text>
+      <rect x="408" y="76" width="50" height="40" rx="4" class="box"/><text x="433" y="101" text-anchor="middle">3</text>
+      <rect x="462" y="76" width="50" height="40" rx="4" class="box"/><text x="487" y="101" text-anchor="middle">4</text>
+      <line x1="298" y1="96" x2="250" y2="96" class="ln" marker-end="url(#sq-a)"/>
+      <text x="274" y="86" text-anchor="middle" class="t-sm">pop</text>
+      <line x1="566" y1="96" x2="516" y2="96" class="ln" marker-end="url(#sq-a)"/>
+      <text x="542" y="86" text-anchor="middle" class="t-sm">push</text>
+      <text x="325" y="138" text-anchor="middle" class="t-sm t-muted">front</text>
+      <text x="487" y="138" text-anchor="middle" class="t-sm t-muted">back</text>
+      <text x="406" y="196" text-anchor="middle" class="t-head">QUEUE = FIFO</text>
+      <text x="406" y="214" text-anchor="middle" class="t-sm t-muted">first in, first out · a shop queue</text>
+    </svg>
+    </div>
+    <figcaption><b>The difference is only where items leave.</b> The yellow item is the next one out: the newest on a stack, the oldest in a queue.</figcaption>
+  </figure>
+
+  <div class="tbl-wrap"><table class="tbl">
+    <thead><tr><th></th><th><code>unordered_map</code></th><th><code>map</code></th></tr></thead>
+    <tbody>
+      <tr><td><b>Inside</b></td><td>hash table</td><td>sorted tree</td></tr>
+      <tr><td><b>Lookup</b></td><td>O(1) on average</td><td>O(log n)</td></tr>
+      <tr><td><b>Order</b></td><td>none</td><td>keys come out sorted</td></tr>
+      <tr><td><b>Use when</b></td><td>the default choice</td><td>you need sorted keys</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 class="topic" id="t-bigo"><span class="n">2.7</span>Big-O: how to spot it</h3>
+  <figure class="fig" id="bigo">
+    <div class="legend" aria-hidden="true">
+      <span><i style="background:var(--s1)"></i>O(1)</span>
+      <span><i style="background:var(--s2)"></i>O(log n)</span>
+      <span><i style="background:var(--s3)"></i>O(n)</span>
+      <span><i style="background:var(--s4)"></i>O(n log n)</span>
+      <span><i style="background:var(--s5)"></i>O(n²)</span>
+    </div>
+    <div class="fig-scroll"><div class="viz">
+      <svg class="dg" viewBox="0 0 580 300" role="img" aria-label="Line chart of steps against input size n from 1 to 16. O(1) stays flat at 1, O(log n) reaches 4, O(n) reaches 16, O(n log n) leaves the top of the chart at n about 11, and O(n squared) leaves it at n about 6."></svg>
+      <div class="tip" hidden></div>
+    </div></div>
+    <figcaption><b>How fast the work grows as the input grows.</b> Hover or tap the chart to compare at one size. O(n²) shoots off the top before n reaches 7, which is why a loop inside a loop is the one to avoid.</figcaption>
+    <details class="reveal"><summary>Show the numbers</summary><div class="body"><div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>n</th><th>O(1)</th><th>O(log n)</th><th>O(n)</th><th>O(n log n)</th><th>O(n²)</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td></tr>
+        <tr><td>2</td><td>1</td><td>1</td><td>2</td><td>2</td><td>4</td></tr>
+        <tr><td>4</td><td>1</td><td>2</td><td>4</td><td>8</td><td>16</td></tr>
+        <tr><td>8</td><td>1</td><td>3</td><td>8</td><td>24</td><td>64</td></tr>
+        <tr><td>16</td><td>1</td><td>4</td><td>16</td><td>64</td><td>256</td></tr>
+      </tbody>
+    </table></div></div></details>
+  </figure>
+
+  <div class="tbl-wrap"><table class="tbl">
+    <thead><tr><th>Big-O</th><th>Spot it by</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td class="big">O(1)</td><td>No loop; same speed whatever the size</td><td><code>v[i]</code>, a map lookup</td></tr>
+      <tr><td class="big">O(log n)</td><td>Halving every step</td><td>binary search, an <code>n = n / 2</code> loop</td></tr>
+      <tr><td class="big">O(n)</td><td>One loop over the input</td><td>summing a vector</td></tr>
+      <tr><td class="big">O(n log n)</td><td>Sorting</td><td><code>sort(v.begin(), v.end())</code></td></tr>
+      <tr><td class="big">O(n²)</td><td>A loop inside a loop</td><td>comparing every pair</td></tr>
+    </tbody>
+  </table></div>
+  <p class="say" data-label="Say this after every solution">"This is O(n) time because I loop through the input once."</p>
+</section>
+
+<!-- ===================== 3 OOP CODE ===================== -->
+<section id="oop" class="sec">
+  <h2 class="sec-h"><span class="gate">3</span>OOP code</h2>
+  <p class="sec-sub">The only two class snippets you need. Read each one, then <b>Reset</b>, delete it all and type it from memory. Run it to check.</p>
+
+  <h3 class="topic">A · Encapsulation: a class with private data</h3>
+  <div class="runner" data-kind="program" data-id="oop-a">
+<script type="text/plain" data-role="code">#include <iostream>
+#include <string>
+using namespace std;
+
+class BankAccount {
+private:
+    double balance;          // hidden: no one outside can touch it directly
+
+public:
+    BankAccount(double start) {   // constructor: runs when the object is created
+        balance = start;
+    }
+
+    void deposit(double amount) {  // the ONLY way in, so we can validate
+        if (amount > 0) {
+            balance += amount;
+        }
+    }
+
+    double getBalance() {          // "getter": read-only access
+        return balance;
+    }
+};
+
+int main() {
+    BankAccount acc(100);
+    acc.deposit(50);
+    acc.deposit(-20);              // rejected
+    cout << acc.getBalance() << endl;  // 150
+    // acc.balance = 1000000;      // COMPILE ERROR: balance is private
+    return 0;
+}</script>
+  </div>
+  <p class="note"><span class="ic">!</span><span>Try it: remove the <code>//</code> in front of <code>acc.balance = 1000000;</code> and Run. The compile error <i>is</i> encapsulation working.</span></p>
+
+  <h3 class="topic" id="oop-b">B · Inheritance and polymorphism: parent and child</h3>
+  <div class="basics">
+    <span class="b-lbl">Start here: the basics</span>
+    <p><b>Do you need this? Yes, but only this much.</b> Polymorphism is one of the 4 OOP pillars, and <code>virtual</code> is the keyword that makes it work in C++. You need to know what it does and be able to write the Animal/Dog example. Four small steps:</p>
+
+    <h4><span class="st">1</span>Inheritance: the child gets the parent's stuff</h4>
+<script type="text/plain" data-code="cpp">class Animal {
+public:
+    void eat() { cout << "eating" << endl; }
+};
+
+class Dog : public Animal { };   // Dog inherits from Animal
+
+int main() {
+    Dog d;
+    d.eat();    // prints "eating": Dog never wrote eat(), it inherited it
+}</script>
+    <p>Read <code>class Dog : public Animal</code> as "a Dog <b>is an</b> Animal". Everything public in Animal now works on a Dog too.</p>
+
+    <h4><span class="st">2</span>Overriding, and the catch</h4>
+    <p>Now both classes have their own <code>speak()</code>. Calling it on the Dog itself works. Calling it through an <code>Animal*</code> pointer runs the <b>wrong</b> one:</p>
+    <div class="runner" data-kind="program" data-id="v-without">
+<script type="text/plain" data-role="code">#include <iostream>
+using namespace std;
+
+class Animal {
+public:
+    void speak() { cout << "Animal sound" << endl; }   // NOT virtual
+};
+
+class Dog : public Animal {
+public:
+    void speak() { cout << "Woof" << endl; }           // Dog's own version
+};
+
+int main() {
+    Dog d;
+    d.speak();          // Woof
+
+    Animal* p = &d;     // an Animal pointer, aimed at the Dog
+    p->speak();         // Animal sound   <- the catch
+    return 0;
+}</script>
+    </div>
+    <p>Without <code>virtual</code>, C++ picks the function from the <b>pointer's type</b> (<code>Animal*</code>), not from what the object really is (a Dog).</p>
+
+    <h4><span class="st">3</span>Add <code>virtual</code>: the fix</h4>
+    <p>Two words change: <code>virtual</code> on the parent's function, and <code>override</code> on the child's.</p>
+    <div class="runner" data-kind="program" data-id="v-with">
+<script type="text/plain" data-role="code">#include <iostream>
+using namespace std;
+
+class Animal {
+public:
+    virtual void speak() { cout << "Animal sound" << endl; }   // + virtual
+};
+
+class Dog : public Animal {
+public:
+    void speak() override { cout << "Woof" << endl; }          // + override
+};
+
+int main() {
+    Dog d;
+    d.speak();          // Woof
+
+    Animal* p = &d;
+    p->speak();         // Woof   <- fixed: C++ checks the real object
+    return 0;
+}</script>
+    </div>
+    <p>Now C++ checks the real object while the program runs, and calls Dog's <code>speak()</code>. <b>That's polymorphism:</b> the same call, <code>p-&gt;speak()</code>, does different things depending on what the object really is.</p>
+
+    <h4><span class="st">4</span>Why use a parent pointer at all?</h4>
+<script type="text/plain" data-code="cpp">Dog d;
+Cat c;
+vector<Animal*> pets = {&d, &c};   // one list holds different kinds of animal
+
+for (Animal* p : pets) {
+    p->speak();                    // Woof, then Meow: each runs its own version
+}</script>
+    <p>One list and one loop handle every kind of animal. Add a <code>Cow</code> class later and this loop doesn't change.</p>
+
+    <div class="tbl-wrap"><table class="tbl kw">
+      <thead><tr><th>You'll see</th><th>It means</th></tr></thead>
+      <tbody>
+        <tr><td class="big">class Dog : public Animal</td><td>Dog inherits from Animal</td></tr>
+        <tr><td class="big">virtual</td><td>In the parent: "children can replace this, and a call through a parent pointer runs the child's version"</td></tr>
+        <tr><td class="big">override</td><td>In the child: "I'm replacing a virtual function". The compiler checks you got the name right.</td></tr>
+        <tr><td class="big">protected:</td><td>Like <code>private</code>, but child classes can use it too</td></tr>
+        <tr><td class="big">: Animal(n)</td><td>After the child's constructor: run the parent's constructor first</td></tr>
+        <tr><td class="big">virtual ~Animal() {}</td><td>A virtual destructor, so deleting a Dog through an <code>Animal*</code> cleans up properly</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <p><b>The full version.</b> Everything above in one program, with a constructor and a second child class. This is the one to learn.</p>
+  <figure class="fig">
+    <div class="fig-scroll">
+    <svg class="dg" viewBox="0 0 620 300" role="img" aria-label="Dog and Cat inherit name and speak from Animal. a1 is an Animal pointer aimed at a Dog. With virtual, a1->speak() runs Dog's speak and prints Woof. Without virtual, it runs Animal's speak.">
+      <defs>
+        <marker id="oo-inh" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="13" markerHeight="13" markerUnits="userSpaceOnUse" orient="auto"><path d="M1,1 L11,6 L1,11 z" class="mk-hollow"/></marker>
+        <marker id="oo-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L9,5 L0,9 z" class="mk-acc"/></marker>
+        <marker id="oo-dash" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L9,5 L0,9 z" class="mk-muted"/></marker>
+      </defs>
+      <rect x="340" y="14" width="240" height="108" rx="8" class="box"/>
+      <path d="M340,46 V22 a8,8 0 0 1 8,-8 H572 a8,8 0 0 1 8,8 V46 Z" class="box-hl"/>
+      <rect x="340" y="14" width="240" height="108" rx="8" class="stroke-only"/>
+      <text x="460" y="36" text-anchor="middle" class="t-code on-hl">class Animal</text>
+      <text x="354" y="70">protected: name</text>
+      <text x="354" y="94">virtual speak()</text>
+      <text x="354" y="113" class="t-sm t-muted">→ "makes a sound"</text>
+
+      <rect x="250" y="200" width="170" height="88" rx="8" class="box"/>
+      <path d="M250,232 V208 a8,8 0 0 1 8,-8 H412 a8,8 0 0 1 8,8 V232 Z" class="box-hl"/>
+      <rect x="250" y="200" width="170" height="88" rx="8" class="stroke-only"/>
+      <text x="335" y="222" text-anchor="middle" class="t-code on-hl">class Dog</text>
+      <text x="262" y="256">speak() override</text>
+      <text x="262" y="276" class="t-sm t-muted">→ "Rex says Woof"</text>
+
+      <rect x="440" y="200" width="170" height="88" rx="8" class="box"/>
+      <path d="M440,232 V208 a8,8 0 0 1 8,-8 H602 a8,8 0 0 1 8,8 V232 Z" class="box-hl"/>
+      <rect x="440" y="200" width="170" height="88" rx="8" class="stroke-only"/>
+      <text x="525" y="222" text-anchor="middle" class="t-code on-hl">class Cat</text>
+      <text x="452" y="256">speak() override</text>
+      <text x="452" y="276" class="t-sm t-muted">→ "Tom says Meow"</text>
+
+      <line x1="335" y1="198" x2="419" y2="125" class="ln" marker-end="url(#oo-inh)"/>
+      <line x1="525" y1="198" x2="501" y2="125" class="ln" marker-end="url(#oo-inh)"/>
+      <text x="443" y="166" text-anchor="middle" class="t-sm t-muted">inherits</text>
+
+      <rect x="10" y="124" width="160" height="58" rx="8" class="box"/>
+      <text x="90" y="149" text-anchor="middle">a1-&gt;speak()</text>
+      <text x="90" y="169" text-anchor="middle" class="t-sm t-muted">a1 is an Animal*</text>
+      <path d="M170,140 C250,140 262,94 336,94" class="ln-dash" marker-end="url(#oo-dash)"/>
+      <text x="284" y="142" text-anchor="middle" class="t-sm t-muted">no virtual</text>
+      <path d="M170,168 C212,168 212,262 246,262" class="ln-acc" marker-end="url(#oo-acc)"/>
+      <text x="200" y="226" text-anchor="end" class="t-sm t-acc">virtual</text>
+    </svg>
+    </div>
+    <figcaption><b><code>virtual</code> decides which arrow the call follows.</b> <code>a1</code> is declared as <code>Animal*</code> but points at a Dog. With <code>virtual</code>, C++ checks the real object and runs Dog's <code>speak()</code> (blue). Without it, C++ goes by the pointer type and runs Animal's (dashed).</figcaption>
+  </figure>
+
+  <div class="runner" data-kind="program" data-id="oop-b">
+<script type="text/plain" data-role="code">#include <iostream>
+#include <string>
+using namespace std;
+
+class Animal {                       // PARENT (base) class
+protected:
+    string name;                     // protected = visible to children, hidden from outside
+
+public:
+    Animal(string n) {
+        name = n;
+    }
+
+    virtual void speak() {           // virtual = children can override this
+        cout << name << " makes a sound" << endl;
+    }
+
+    virtual ~Animal() {}             // always add this when you have virtual functions
+};
+
+class Dog : public Animal {          // Dog IS-A Animal (inherits name and speak)
+public:
+    Dog(string n) : Animal(n) {}     // ": Animal(n)" = run the parent's constructor first
+
+    void speak() override {          // override = replacing the parent's version
+        cout << name << " says Woof" << endl;
+    }
+};
+
+class Cat : public Animal {
+public:
+    Cat(string n) : Animal(n) {}
+
+    void speak() override {
+        cout << name << " says Meow" << endl;
+    }
+};
+
+int main() {
+    Dog d("Rex");
+    Cat c("Tom");
+
+    Animal* a1 = &d;     // parent pointer, child object
+    Animal* a2 = &c;
+
+    a1->speak();         // Rex says Woof   (POLYMORPHISM: the same call...
+    a2->speak();         // Tom says Meow    ...does different things)
+    return 0;
+}</script>
+  </div>
+  <p><b>How to read it:</b> <code>Dog</code> never declared <code>name</code>, but it can use it, because it <b>inherited</b> it from <code>Animal</code>. That's inheritance. <code>a1</code> and <code>a2</code> are both <code>Animal*</code>, yet each runs its own <code>speak()</code>. That's polymorphism, and it only works because of <code>virtual</code>.</p>
+  <p class="note"><span class="ic">?</span><span><b>Test yourself:</b> predict what happens if you delete the word <code>virtual</code> in front of <code>speak()</code>. (You'll also need to delete both <code>override</code>s, or it won't compile.) Then do it and Run. Both lines print "… makes a sound".</span></p>
+</section>
+
+<!-- ===================== 4 LIVE CODING ===================== -->
+<section id="coding" class="sec">
+  <h2 class="sec-h"><span class="gate">4</span>Live coding</h2>
+  <p class="sec-sub">Every answer has the same shape: <b>a function above <code>main</code> that takes the input and returns the answer.</b> Write it in the editor, then press Run to check it against the tests.</p>
+
+  <div class="local">
+    <b>C++ is now installed on your laptop</b>
+    <p>g++ 16.2 (WinLibs). In VS Code: <i>Terminal → New Terminal</i>, then</p>
+    <p><code>g++ practice.cpp -o practice</code> and then <code>./practice</code></p>
+    <p style="color:#8B949E;font-size:14px">If it says g++ isn't recognised, close and reopen VS Code once so it picks up the new PATH.</p>
+  </div>
+
+  <p class="note"><span class="ic">▶</span><span>The <b>Run</b> button sends your code to Compiler Explorer (gcc 13, C++17) and shows the result here. <b>Ctrl+Enter</b> runs too. Your code is saved in this browser as you type. If the page can't reach the compiler (the claude.ai copy can't), Run gives you a one-click link that opens the same code in Compiler Explorer instead.</span></p>
+
+  <h3 class="topic" id="scratch">Blank file: the starter template</h3>
+  <p>Paste this into the online compiler <b>before</b> the call. Use it here to practise writing a whole program from nothing.</p>
+  <div class="runner" data-kind="program" data-id="scratch">
+<script type="text/plain" data-role="code">#include <iostream>
+#include <string>
+#include <vector>
+#include <unordered_map>
+#include <algorithm>
+using namespace std;
+
+// your function goes here, ABOVE main
+
+int main() {
+
+    return 0;
+}</script>
+  </div>
+
+  <!-- Drill 0 -->
+  <article class="card problem" id="drill0">
+    <div class="p-head"><span class="tag hot">Drill 0 · do first</span><span class="tag">functions outside main</span><span class="badge-done">✓ Passed</span></div>
+    <h3>Warm-up: three small functions</h3>
+    <p>You said functions outside <code>main</code> are your weak spot. Every live-coding answer is a function, so this matters most. The pattern: <code class="wrapc">returnType name(parameters) { …; return value; }</code></p>
+    <p class="note"><span class="ic">&amp;</span><span><code>const vector&lt;int&gt;&amp; v</code> just means "read the vector without copying it". New to that? See <a href="#t-pass">2.2</a>.</span></p>
+    <div class="runner" data-kind="problem" data-id="drill0">
+<script type="text/plain" data-role="stub">int sumVector(const vector<int>& v) {
+    // add up every element and return the total
+    return 0;
+}
+
+int findMax(const vector<int>& v) {
+    // return the biggest element
+    return 0;
+}
+
+double average(const vector<int>& v) {
+    // watch out for integer division!
+    return 0;
+}</script>
+<script type="text/plain" data-role="tests">int main() {
+    vector<int> nums = {4, 9, 2, 7};
+    check(sumVector(nums) == 22, "sumVector {4,9,2,7} = 22");
+    check(sumVector({}) == 0, "sumVector {} = 0");
+    check(findMax(nums) == 9, "findMax {4,9,2,7} = 9");
+    check(findMax({-5, -2, -9}) == -2, "findMax all negative {-5,-2,-9} = -2");
+    check(average(nums) == 5.5, "average {4,9,2,7} = 5.5");
+    return 0;
+}</script>
+<script type="text/plain" data-role="solution">int sumVector(const vector<int>& v) {
+    int total = 0;
+    for (int i = 0; i < v.size(); i++) {
+        total += v[i];
+    }
+    return total;
+}
+
+int findMax(const vector<int>& v) {
+    int biggest = v[0];                // start with the FIRST element, not 0
+    for (int i = 1; i < v.size(); i++) {
+        if (v[i] > biggest) {
+            biggest = v[i];
+        }
+    }
+    return biggest;
+}
+
+double average(const vector<int>& v) {
+    return (double)sumVector(v) / v.size();   // (double) avoids integer division!
+}</script>
+    </div>
+    <p class="sec-sub" style="font-size:15.5px;margin-bottom:10px">Why <code>const vector&lt;int&gt;&amp;</code>? Nothing gets copied and the function can't change the vector (see <a href="#t-pass">2.2</a>). If that feels like too much under pressure, <code>vector&lt;int&gt; v</code> also works. It's just slower.</p>
+  </article>
+
+  <!-- Problem 1 -->
+  <article class="card problem" id="p1">
+    <div class="p-head"><span class="tag">Problem 1</span><span class="tag">strings · loops</span><span class="badge-done">✓ Passed</span></div>
+    <h3>Reverse a string / palindrome check</h3>
+    <p class="say" data-label="Say this first">"Input is a string, output is the reversed string. I'll loop from the last character to the first and build a new string. That's O(n). For the palindrome check, I compare the string to its reverse."</p>
+    <div class="runner" data-kind="problem" data-id="p1">
+<script type="text/plain" data-role="stub">string reverseString(const string& s) {
+    // build a new string, from the last character to the first
+    return "";
+}
+
+bool isPalindrome(const string& s) {
+    // true if s reads the same backwards
+    return false;
+}</script>
+<script type="text/plain" data-role="tests">int main() {
+    check(reverseString("hello") == "olleh", "reverseString hello = olleh");
+    check(reverseString("") == "", "reverseString of an empty string");
+    check(reverseString("a") == "a", "reverseString a = a");
+    check(isPalindrome("racecar") == true, "isPalindrome racecar = true");
+    check(isPalindrome("abba") == true, "isPalindrome abba = true");
+    check(isPalindrome("hello") == false, "isPalindrome hello = false");
+    return 0;
+}</script>
+<script type="text/plain" data-role="solution">string reverseString(const string& s) {
+    string result = "";
+    for (int i = s.size() - 1; i >= 0; i--) {   // last index is size - 1
+        result += s[i];
+    }
+    return result;
+}
+
+bool isPalindrome(const string& s) {
+    return s == reverseString(s);
+}
+
+// Level-up, if they ask "can you do it without making a copy?"
+bool isPalindrome2(const string& s) {
+    int left = 0;
+    int right = s.size() - 1;
+    while (left < right) {
+        if (s[left] != s[right]) {
+            return false;          // mismatch: not a palindrome
+        }
+        left++;
+        right--;
+    }
+    return true;
+}</script>
+    </div>
+    <figure class="fig">
+      <div class="fig-scroll">
+      <svg class="dg" viewBox="0 0 580 178" role="img" aria-label="Two-pointer palindrome check on racecar: compare index 0 with 6, then 1 with 5, then 2 with 4. All match, and the pointers meet at the middle letter e, so it is a palindrome.">
+        <path d="M108,86 C108,2 468,2 468,86" class="ln"/>
+        <path d="M168,86 C168,30 408,30 408,86" class="ln"/>
+        <path d="M228,86 C228,58 348,58 348,86" class="ln"/>
+        <circle cx="288" cy="23" r="9" class="ck-ring"/><path d="M283.5,23.5 L287,27 L293,19.5" class="ck"/>
+        <circle cx="288" cy="44" r="9" class="ck-ring"/><path d="M283.5,44.5 L287,48 L293,40.5" class="ck"/>
+        <circle cx="288" cy="65" r="9" class="ck-ring"/><path d="M283.5,65.5 L287,69 L293,61.5" class="ck"/>
+        <rect x="80" y="88" width="56" height="48" rx="4" class="box"/><text x="108" y="119" text-anchor="middle" class="t-mid">r</text>
+        <rect x="140" y="88" width="56" height="48" rx="4" class="box"/><text x="168" y="119" text-anchor="middle" class="t-mid">a</text>
+        <rect x="200" y="88" width="56" height="48" rx="4" class="box"/><text x="228" y="119" text-anchor="middle" class="t-mid">c</text>
+        <rect x="260" y="88" width="56" height="48" rx="4" class="box-soft"/><text x="288" y="119" text-anchor="middle" class="t-mid">e</text>
+        <rect x="320" y="88" width="56" height="48" rx="4" class="box"/><text x="348" y="119" text-anchor="middle" class="t-mid">c</text>
+        <rect x="380" y="88" width="56" height="48" rx="4" class="box"/><text x="408" y="119" text-anchor="middle" class="t-mid">a</text>
+        <rect x="440" y="88" width="56" height="48" rx="4" class="box"/><text x="468" y="119" text-anchor="middle" class="t-mid">r</text>
+        <text x="108" y="154" text-anchor="middle" class="t-sm t-muted">0</text>
+        <text x="168" y="154" text-anchor="middle" class="t-sm t-muted">1</text>
+        <text x="228" y="154" text-anchor="middle" class="t-sm t-muted">2</text>
+        <text x="288" y="154" text-anchor="middle" class="t-sm t-muted">3</text>
+        <text x="348" y="154" text-anchor="middle" class="t-sm t-muted">4</text>
+        <text x="408" y="154" text-anchor="middle" class="t-sm t-muted">5</text>
+        <text x="468" y="154" text-anchor="middle" class="t-sm t-muted">6</text>
+        <text x="108" y="172" text-anchor="middle" class="t-sm t-acc">left →</text>
+        <text x="288" y="172" text-anchor="middle" class="t-sm t-muted">stop</text>
+        <text x="468" y="172" text-anchor="middle" class="t-sm t-acc">← right</text>
+      </svg>
+      </div>
+      <figcaption><b>The two-pointer version (in the solution) compares from the outside in.</b> Check 0 with 6, then 1 with 5, then 2 with 4. One mismatch means <code>return false</code>. When <code>left</code> meets <code>right</code> in the middle, every pair matched, so it's a palindrome. No copy is made.</figcaption>
+    </figure>
+  </article>
+
+  <!-- Problem 2 -->
+  <article class="card problem" id="p2">
+    <div class="p-head"><span class="tag hot">Problem 2 · reported in a 2026 mthree screening</span><span class="badge-done">✓ Passed</span></div>
+    <h3>Decimal to binary</h3>
+    <p class="say" data-label="Say this first">"I repeatedly take <code>n % 2</code>, which is the last bit, and divide n by 2 until it hits 0. The bits come out last-first, so I add each one to the <b>front</b> of the string. Edge case: 0 should return "0". It's O(log n) because n halves each time."</p>
+    <figure class="fig">
+      <div class="fig-scroll">
+      <svg class="dg" viewBox="0 0 600 206" role="img" aria-label="Converting 13 to binary: 13 halves to 6, 3, 1, 0. The remainders are 1, 0, 1, 1. Each remainder is added to the front of the string, giving 1, 01, 101, then 1101.">
+        <defs><marker id="bn-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L9,5 L0,9 z" class="mk"/></marker></defs>
+        <text x="10" y="55" class="t-sm t-muted">n</text>
+        <text x="10" y="117" class="t-sm t-muted">n % 2</text>
+        <text x="10" y="177" class="t-sm t-muted">binary</text>
+        <rect x="118" y="30" width="64" height="40" rx="5" class="box"/><text x="150" y="57" text-anchor="middle" class="t-mid">13</text>
+        <rect x="218" y="30" width="64" height="40" rx="5" class="box"/><text x="250" y="57" text-anchor="middle" class="t-mid">6</text>
+        <rect x="318" y="30" width="64" height="40" rx="5" class="box"/><text x="350" y="57" text-anchor="middle" class="t-mid">3</text>
+        <rect x="418" y="30" width="64" height="40" rx="5" class="box"/><text x="450" y="57" text-anchor="middle" class="t-mid">1</text>
+        <rect x="518" y="30" width="64" height="40" rx="5" class="box-soft"/><text x="550" y="57" text-anchor="middle" class="t-mid t-muted">0</text>
+        <line x1="184" y1="50" x2="215" y2="50" class="ln" marker-end="url(#bn-a)"/><text x="200" y="42" text-anchor="middle" class="t-sm t-muted">÷2</text>
+        <line x1="284" y1="50" x2="315" y2="50" class="ln" marker-end="url(#bn-a)"/><text x="300" y="42" text-anchor="middle" class="t-sm t-muted">÷2</text>
+        <line x1="384" y1="50" x2="415" y2="50" class="ln" marker-end="url(#bn-a)"/><text x="400" y="42" text-anchor="middle" class="t-sm t-muted">÷2</text>
+        <line x1="484" y1="50" x2="515" y2="50" class="ln" marker-end="url(#bn-a)"/><text x="500" y="42" text-anchor="middle" class="t-sm t-muted">÷2</text>
+        <line x1="150" y1="72" x2="150" y2="93" class="ln" marker-end="url(#bn-a)"/>
+        <line x1="250" y1="72" x2="250" y2="93" class="ln" marker-end="url(#bn-a)"/>
+        <line x1="350" y1="72" x2="350" y2="93" class="ln" marker-end="url(#bn-a)"/>
+        <line x1="450" y1="72" x2="450" y2="93" class="ln" marker-end="url(#bn-a)"/>
+        <rect x="132" y="96" width="36" height="32" rx="4" class="box-hl"/><text x="150" y="117" text-anchor="middle" class="on-hl">1</text>
+        <rect x="232" y="96" width="36" height="32" rx="4" class="box-hl"/><text x="250" y="117" text-anchor="middle" class="on-hl">0</text>
+        <rect x="332" y="96" width="36" height="32" rx="4" class="box-hl"/><text x="350" y="117" text-anchor="middle" class="on-hl">1</text>
+        <rect x="432" y="96" width="36" height="32" rx="4" class="box-hl"/><text x="450" y="117" text-anchor="middle" class="on-hl">1</text>
+        <text x="550" y="117" text-anchor="middle" class="t-sm t-muted">stop</text>
+        <line x1="150" y1="130" x2="150" y2="153" class="ln" marker-end="url(#bn-a)"/>
+        <line x1="250" y1="130" x2="250" y2="153" class="ln" marker-end="url(#bn-a)"/>
+        <line x1="350" y1="130" x2="350" y2="153" class="ln" marker-end="url(#bn-a)"/>
+        <line x1="450" y1="130" x2="450" y2="153" class="ln" marker-end="url(#bn-a)"/>
+        <rect x="118" y="156" width="64" height="32" rx="4" class="box"/><text x="150" y="177" text-anchor="middle"><tspan class="t-acc" style="font-weight:600">1</tspan></text>
+        <rect x="218" y="156" width="64" height="32" rx="4" class="box"/><text x="250" y="177" text-anchor="middle"><tspan class="t-acc" style="font-weight:600">0</tspan>1</text>
+        <rect x="318" y="156" width="64" height="32" rx="4" class="box"/><text x="350" y="177" text-anchor="middle"><tspan class="t-acc" style="font-weight:600">1</tspan>01</text>
+        <rect x="418" y="156" width="64" height="32" rx="4" class="box"/><text x="450" y="177" text-anchor="middle"><tspan class="t-acc" style="font-weight:600">1</tspan>101</text>
+        <text x="550" y="177" text-anchor="middle" class="t-res">= 1101</text>
+      </svg>
+      </div>
+      <figcaption><b>Dry run with 13.</b> Each step: the remainder <code>n % 2</code> is the next bit, and it goes on the <b>front</b> of the string (shown in blue). Then <code>n = n / 2</code>. Stop at 0.</figcaption>
+    </figure>
+    <div class="runner" data-kind="problem" data-id="p2">
+<script type="text/plain" data-role="stub">string decimalToBinary(int n) {
+    // repeat: take n % 2, put it at the FRONT, then n = n / 2
+    // remember the n == 0 edge case
+    return "";
+}</script>
+<script type="text/plain" data-role="tests">int main() {
+    check(decimalToBinary(13) == "1101", "decimalToBinary 13 = 1101");
+    check(decimalToBinary(0) == "0", "decimalToBinary 0 = 0  (edge case)");
+    check(decimalToBinary(1) == "1", "decimalToBinary 1 = 1");
+    check(decimalToBinary(8) == "1000", "decimalToBinary 8 = 1000");
+    check(decimalToBinary(5) == "101", "decimalToBinary 5 = 101");
+    return 0;
+}</script>
+<script type="text/plain" data-role="solution">string decimalToBinary(int n) {
+    if (n == 0) return "0";            // edge case
+
+    string binary = "";
+    while (n > 0) {
+        binary = to_string(n % 2) + binary;   // put the new bit at the FRONT
+        n = n / 2;
+    }
+    return binary;
+}</script>
+    </div>
+  </article>
+
+  <!-- Problem 3 -->
+  <article class="card problem" id="p3">
+    <div class="p-head"><span class="tag">Problem 3</span><span class="tag">unordered_map</span><span class="badge-done">✓ Passed</span></div>
+    <h3>First repeated character</h3>
+    <p class="say" data-label="Say this first">"I'll go through the string once and count each character in an unordered_map. The moment a character's count reaches 2, that's the first repeat. It's O(n) time because the map lookup is O(1)."</p>
+    <figure class="fig">
+      <div class="fig-scroll">
+      <svg class="dg" viewBox="0 0 580 190" role="img" aria-label="Scanning amadeus left to right. At index 2 the letter a is counted a second time, so the map holds a: 2 and m: 1, and the function returns a.">
+        <defs><marker id="rp-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L9,5 L0,9 z" class="mk-acc"/></marker></defs>
+        <text x="20" y="24" class="t-head">READ LEFT → RIGHT</text>
+        <rect x="20" y="36" width="46" height="44" rx="4" class="box-soft"/><text x="43" y="64" text-anchor="middle" class="t-mid">a</text>
+        <rect x="70" y="36" width="46" height="44" rx="4" class="box-soft"/><text x="93" y="64" text-anchor="middle" class="t-mid">m</text>
+        <rect x="120" y="36" width="46" height="44" rx="4" class="box-hl"/><text x="143" y="64" text-anchor="middle" class="t-mid on-hl">a</text>
+        <rect x="170" y="36" width="46" height="44" rx="4" class="box"/><text x="193" y="64" text-anchor="middle" class="t-mid t-muted">d</text>
+        <rect x="220" y="36" width="46" height="44" rx="4" class="box"/><text x="243" y="64" text-anchor="middle" class="t-mid t-muted">e</text>
+        <rect x="270" y="36" width="46" height="44" rx="4" class="box"/><text x="293" y="64" text-anchor="middle" class="t-mid t-muted">u</text>
+        <rect x="320" y="36" width="46" height="44" rx="4" class="box"/><text x="343" y="64" text-anchor="middle" class="t-mid t-muted">s</text>
+        <text x="43" y="98" text-anchor="middle" class="t-sm t-muted">0</text>
+        <text x="93" y="98" text-anchor="middle" class="t-sm t-muted">1</text>
+        <text x="143" y="98" text-anchor="middle" class="t-sm t-muted">2</text>
+        <text x="193" y="98" text-anchor="middle" class="t-sm t-muted">3</text>
+        <text x="243" y="98" text-anchor="middle" class="t-sm t-muted">4</text>
+        <text x="293" y="98" text-anchor="middle" class="t-sm t-muted">5</text>
+        <text x="343" y="98" text-anchor="middle" class="t-sm t-muted">6</text>
+        <line x1="143" y1="134" x2="143" y2="107" class="ln-acc" marker-end="url(#rp-a)"/>
+        <text x="143" y="152" text-anchor="middle" class="t-sm t-acc">i = 2</text>
+        <text x="250" y="152" text-anchor="middle" class="t-sm t-muted">never reached</text>
+
+        <text x="400" y="28" class="t-sm t-muted">count so far</text>
+        <rect x="400" y="38" width="160" height="34" rx="4" class="box-hl"/>
+        <text x="416" y="60" class="on-hl">'a'</text><text x="480" y="60" text-anchor="middle" class="on-hl">→</text><text x="544" y="60" text-anchor="end" class="on-hl" style="font-weight:600">2</text>
+        <rect x="400" y="78" width="160" height="34" rx="4" class="box"/>
+        <text x="416" y="100">'m'</text><text x="480" y="100" text-anchor="middle">→</text><text x="544" y="100" text-anchor="end">1</text>
+        <text x="480" y="140" text-anchor="middle" class="t-sm">count hit 2</text>
+        <text x="480" y="162" text-anchor="middle" class="t-res t-acc">return 'a'</text>
+      </svg>
+      </div>
+      <figcaption><b>Dry run with "amadeus".</b> <code>count['a']++</code> takes 'a' to 1, then 'm' to 1, then 'a' to <b>2</b>: that's the first repeat, so return straight away. The rest of the string is never read.</figcaption>
+    </figure>
+    <div class="runner" data-kind="problem" data-id="p3">
+<script type="text/plain" data-role="stub">char firstRepeatedChar(const string& s) {
+    // return the first character that shows up a 2nd time
+    // return '-' if nothing repeats
+    return ' ';
+}</script>
+<script type="text/plain" data-role="tests">int main() {
+    check(firstRepeatedChar("amadeus") == 'a', "firstRepeatedChar amadeus = a");
+    check(firstRepeatedChar("heathrow") == 'h', "firstRepeatedChar heathrow = h");
+    check(firstRepeatedChar("abba") == 'b', "firstRepeatedChar abba = b  (b repeats before a does)");
+    check(firstRepeatedChar("abc") == '-', "firstRepeatedChar abc = -  (no repeats)");
+    check(firstRepeatedChar("") == '-', "firstRepeatedChar of an empty string = -");
+    return 0;
+}</script>
+<script type="text/plain" data-role="solution">char firstRepeatedChar(const string& s) {
+    unordered_map<char, int> count;      // key = character, value = times seen
+    for (int i = 0; i < s.size(); i++) {
+        count[s[i]]++;                   // a missing key starts at 0 automatically
+        if (count[s[i]] == 2) {
+            return s[i];
+        }
+    }
+    return '-';                          // no repeats
+}
+
+/* If your mind goes blank on maps, this brute-force version is fine (O(n^2)):
+    for (int i = 0; i < s.size(); i++) {
+        for (int j = 0; j < i; j++) {    // have I seen s[i] before position i?
+            if (s[j] == s[i]) return s[i];
+        }
+    }
+    return '-';
+   Then say: "This is O(n squared); I could make it O(n) with an unordered_map."
+*/</script>
+    </div>
+    <h4 class="mini">The only unordered_map you need</h4>
+<script type="text/plain" data-code="cpp">unordered_map<char, int> m;
+m['a']++;                         // add or increase a count
+cout << m['a'];                   // read a count
+for (auto p : m) {                // loop over everything
+    cout << p.first << ": " << p.second << endl;   // first = key, second = value
+}</script>
+  </article>
+
+  <!-- Problem 4 -->
+  <article class="card problem" id="p4">
+    <div class="p-head"><span class="tag">Problem 4</span><span class="tag">loops · %</span><span class="badge-done">✓ Passed</span></div>
+    <h3>Is it prime?</h3>
+    <p class="say" data-label="Say this first">"Numbers less than 2 aren't prime. Otherwise I try dividing by every number from 2 upwards. If any divides exactly, <code>n % i == 0</code>, it's not prime. I only need to go up to the square root of n, so the loop runs while <code>i * i &lt;= n</code>. That's O(√n)."</p>
+    <div class="runner" data-kind="problem" data-id="p4">
+<script type="text/plain" data-role="stub">bool isPrime(int n) {
+    // numbers below 2 aren't prime
+    // try dividing by 2, 3, 4... (you only need to go up to the square root)
+    return false;
+}</script>
+<script type="text/plain" data-role="tests">int main() {
+    check(isPrime(29) == true, "isPrime 29 = true");
+    check(isPrime(2) == true, "isPrime 2 = true  (smallest prime)");
+    check(isPrime(97) == true, "isPrime 97 = true");
+    check(isPrime(1) == false, "isPrime 1 = false  (below 2)");
+    check(isPrime(0) == false, "isPrime 0 = false");
+    check(isPrime(9) == false, "isPrime 9 = false  (3 x 3)");
+    check(isPrime(25) == false, "isPrime 25 = false  (5 x 5: needs <= not <)");
+    return 0;
+}</script>
+<script type="text/plain" data-role="solution">bool isPrime(int n) {
+    if (n < 2) return false;
+    for (int i = 2; i * i <= n; i++) {
+        if (n % i == 0) {
+            return false;       // found a divisor
+        }
+    }
+    return true;
+}
+// Forgot the square-root trick? "i < n" still works, it's just O(n). Say so.</script>
+    </div>
+  </article>
+
+  <h4 class="mini">Bonus, only if you have spare time</h4>
+  <ul>
+    <li><b>FizzBuzz:</b> loop 1 to 100. Print "FizzBuzz" if <code>i % 15 == 0</code>, else "Fizz" if <code>% 3</code>, else "Buzz" if <code>% 5</code>, else the number. Check 15 <b>first</b>.</li>
+    <li><b>Fibonacci (nth):</b> keep two variables <code>a = 0, b = 1</code>; in a loop, <code>next = a + b; a = b; b = next;</code></li>
+    <li><b>Swap two ints:</b> <code>void swapInts(int&amp; a, int&amp; b)</code> with a <code>temp</code>. It needs <code>&amp;</code>, or nothing changes.</li>
+  </ul>
+  <p>Use the <a href="#scratch">blank file</a> above to try them.</p>
+</section>
+
+<!-- ===================== 5 TRAPS ===================== -->
+<section id="traps" class="sec">
+  <h2 class="sec-h"><span class="gate">5</span>Chat traps</h2>
+  <p class="sec-sub">"What does this print?" Say your answer out loud <b>before</b> you reveal it. Most have a Run button to prove it.</p>
+
+  <article class="trap" data-id="t1">
+    <div class="trap-h"><i>1</i>Pass by value</div>
+<script type="text/plain" data-code="cpp">void addTen(int x) { x = x + 10; }
+int main() { int a = 5; addTen(a); cout << a; }</script>
+    <details class="reveal"><summary>Reveal answer</summary><div class="body"><p>Prints <b>5</b>. It's passed by value, so only the copy changed. Fix: <code>void addTen(int&amp; x)</code>.</p></div></details>
+<script type="text/plain" data-trap-run>#include <iostream>
+using namespace std;
+void addTen(int x) { x = x + 10; }
+int main() { int a = 5; addTen(a); cout << a; }</script>
+  </article>
+
+  <article class="trap" data-id="t2">
+    <div class="trap-h"><i>2</i>The loop condition</div>
+<script type="text/plain" data-code="cpp">vector<int> v = {10, 20, 30};
+for (int i = 0; i <= v.size(); i++) cout << v[i];</script>
+    <details class="reveal"><summary>Reveal answer</summary><div class="body"><p><b>Out-of-bounds bug.</b> The valid indexes are 0, 1 and 2, but <code>&lt;=</code> makes it read <code>v[3]</code>. That's undefined behaviour: it might print garbage or crash, with no error. Fix: use <code>&lt;</code>.</p></div></details>
+  </article>
+
+  <article class="trap" data-id="t3">
+    <div class="trap-h"><i>3</i>One equals sign</div>
+<script type="text/plain" data-code="cpp">int status = 0;
+if (status = 1) cout << "Active"; else cout << "Cancelled";</script>
+    <details class="reveal"><summary>Reveal answer</summary><div class="body"><p>Prints <b>Active</b>. <code>=</code> <i>assigns</i> 1, which counts as true. Fix: <code>==</code>.</p></div></details>
+<script type="text/plain" data-trap-run>#include <iostream>
+using namespace std;
+int main() {
+    int status = 0;
+    if (status = 1) cout << "Active"; else cout << "Cancelled";
+}</script>
+  </article>
+
+  <article class="trap" data-id="t4">
+    <div class="trap-h"><i>4</i>Integer division</div>
+<script type="text/plain" data-code="cpp">int total = 7, count = 2;
+double avg = total / count;
+cout << avg;</script>
+    <details class="reveal"><summary>Reveal answer</summary><div class="body"><p>Prints <b>3</b>, not 3.5. int ÷ int is integer division, so the .5 is chopped off <i>before</i> the value is stored in the double. Fix: <code>(double)total / count</code>.</p></div></details>
+<script type="text/plain" data-trap-run>#include <iostream>
+using namespace std;
+int main() {
+    int total = 7, count = 2;
+    double avg = total / count;
+    cout << avg;
+}</script>
+  </article>
+
+  <article class="trap" data-id="t5">
+    <div class="trap-h"><i>5</i>a++ vs ++a</div>
+<script type="text/plain" data-code="cpp">int a = 5;
+int b = a++;
+int c = ++a;
+cout << a << " " << b << " " << c;</script>
+    <details class="reveal"><summary>Reveal answer</summary><div class="body"><p>Prints <b>7 5 7</b>. <code>a++</code> uses the value first, then adds (b = 5, a = 6). <code>++a</code> adds first, then uses the value (a = 7, c = 7).</p></div></details>
+<script type="text/plain" data-trap-run>#include <iostream>
+using namespace std;
+int main() {
+    int a = 5;
+    int b = a++;
+    int c = ++a;
+    cout << a << " " << b << " " << c;
+}</script>
+  </article>
+
+  <article class="trap" data-id="t6">
+    <div class="trap-h"><i>6</i>Missing virtual</div>
+<script type="text/plain" data-code="cpp">class Base { public: void show() { cout << "Base"; } };
+class Derived : public Base { public: void show() { cout << "Derived"; } };
+Base* b = new Derived();
+b->show();</script>
+    <details class="reveal"><summary>Reveal answer</summary><div class="body"><p>Prints <b>Base</b>. <code>show()</code> isn't <code>virtual</code>, so C++ goes by the pointer type (<code>Base*</code>). It's the dashed arrow in the <a href="#oop">gate 3 diagram</a>. Fix: <code>virtual void show()</code> in Base, plus a <code>virtual ~Base() {}</code>. (<code>b</code> is never deleted either, so it leaks.)</p></div></details>
+<script type="text/plain" data-trap-run>#include <iostream>
+using namespace std;
+class Base { public: void show() { cout << "Base"; } };
+class Derived : public Base { public: void show() { cout << "Derived"; } };
+int main() {
+    Base* b = new Derived();
+    b->show();
+    delete b;
+}</script>
+  </article>
+
+  <article class="trap" data-id="t7">
+    <div class="trap-h"><i>7</i>Returning an address</div>
+<script type="text/plain" data-code="cpp">int* getScore() {
+    int score = 100;
+    return &score;
+}</script>
+    <details class="reveal"><summary>Reveal answer</summary><div class="body"><p><b>Dangling pointer.</b> <code>score</code> lives on the stack and dies when the function ends (see the <a href="#t-mem">stack diagram</a>), so the returned address points at garbage. Fix: return <code>int</code> by value.</p></div></details>
+  </article>
+</section>
+
+<!-- ===================== 6 SQL ===================== -->
+<section id="sql" class="sec">
+  <h2 class="sec-h"><span class="gate">6</span>SQL</h2>
+  <p class="sec-sub">A 15-minute crash course. Imagine a table <b>Employees</b>(emp_id, name, department, salary). The playground at the bottom runs real queries on it.</p>
+
+  <div class="compare">
+    <div><h4>Primary key</h4><p>A column that uniquely identifies each row (<code>emp_id</code>). It can't be null or repeated.</p></div>
+    <div><h4>Foreign key</h4><p>A column that points at another table's primary key. That's how tables link together.</p></div>
+  </div>
+
+  <p><b>Clause order (memorise):</b></p>
+  <div class="chips"><span class="chip">SELECT</span><span class="sep">→</span><span class="chip">FROM</span><span class="sep">→</span><span class="chip">WHERE</span><span class="sep">→</span><span class="chip">GROUP BY</span><span class="sep">→</span><span class="chip">HAVING</span><span class="sep">→</span><span class="chip">ORDER BY</span><span class="sep">→</span><span class="chip">LIMIT</span></div>
+
+  <figure class="fig">
+    <div class="fig-scroll">
+    <svg class="dg" viewBox="0 0 620 204" role="img" aria-label="How a grouped query runs: FROM takes all rows, WHERE drops individual rows, GROUP BY puts the rest into groups, HAVING drops whole groups, and SELECT outputs one row per group.">
+      <defs><marker id="sql-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L9,5 L0,9 z" class="mk"/></marker></defs>
+      <rect x="30" y="30" width="56" height="10" rx="2" class="bar"/><rect x="30" y="44" width="56" height="10" rx="2" class="bar"/><rect x="30" y="58" width="56" height="10" rx="2" class="bar"/><rect x="30" y="72" width="56" height="10" rx="2" class="bar"/><rect x="30" y="86" width="56" height="10" rx="2" class="bar"/><rect x="30" y="100" width="56" height="10" rx="2" class="bar"/><rect x="30" y="114" width="56" height="10" rx="2" class="bar"/><rect x="30" y="128" width="56" height="10" rx="2" class="bar"/>
+      <rect x="150" y="30" width="56" height="10" rx="2" class="bar"/><rect x="150" y="44" width="56" height="10" rx="2" class="bar"/><rect x="150" y="58" width="56" height="10" rx="2" class="bar-x"/><rect x="150" y="72" width="56" height="10" rx="2" class="bar"/><rect x="150" y="86" width="56" height="10" rx="2" class="bar"/><rect x="150" y="100" width="56" height="10" rx="2" class="bar-x"/><rect x="150" y="114" width="56" height="10" rx="2" class="bar"/><rect x="150" y="128" width="56" height="10" rx="2" class="bar"/>
+      <rect x="270" y="30" width="56" height="10" rx="2" class="bar"/><rect x="270" y="44" width="56" height="10" rx="2" class="bar"/><rect x="270" y="58" width="56" height="10" rx="2" class="bar"/><rect x="270" y="82" width="56" height="10" rx="2" class="bar"/><rect x="270" y="96" width="56" height="10" rx="2" class="bar"/><rect x="270" y="120" width="56" height="10" rx="2" class="bar"/>
+      <rect x="390" y="30" width="56" height="10" rx="2" class="bar"/><rect x="390" y="44" width="56" height="10" rx="2" class="bar"/><rect x="390" y="58" width="56" height="10" rx="2" class="bar"/><rect x="390" y="82" width="56" height="10" rx="2" class="bar"/><rect x="390" y="96" width="56" height="10" rx="2" class="bar"/><rect x="390" y="120" width="56" height="10" rx="2" class="bar-x"/>
+      <rect x="510" y="43" width="56" height="12" rx="2" class="bar-hl"/><rect x="510" y="88" width="56" height="12" rx="2" class="bar-hl"/>
+      <line x1="92" y1="84" x2="144" y2="84" class="ln" marker-end="url(#sql-a)"/>
+      <line x1="212" y1="84" x2="264" y2="84" class="ln" marker-end="url(#sql-a)"/>
+      <line x1="332" y1="84" x2="384" y2="84" class="ln" marker-end="url(#sql-a)"/>
+      <line x1="452" y1="84" x2="504" y2="84" class="ln" marker-end="url(#sql-a)"/>
+      <text x="58" y="168" text-anchor="middle" class="t-head">FROM</text>
+      <text x="178" y="168" text-anchor="middle" class="t-head t-acc">WHERE</text>
+      <text x="298" y="168" text-anchor="middle" class="t-head">GROUP BY</text>
+      <text x="418" y="168" text-anchor="middle" class="t-head t-acc">HAVING</text>
+      <text x="538" y="168" text-anchor="middle" class="t-head">SELECT</text>
+      <text x="58" y="188" text-anchor="middle" class="t-sm t-muted">all rows</text>
+      <text x="178" y="188" text-anchor="middle" class="t-sm t-muted">drops rows</text>
+      <text x="298" y="188" text-anchor="middle" class="t-sm t-muted">makes groups</text>
+      <text x="418" y="188" text-anchor="middle" class="t-sm t-muted">drops groups</text>
+      <text x="538" y="188" text-anchor="middle" class="t-sm t-muted">1 row per group</text>
+    </svg>
+    </div>
+    <figcaption><b>WHERE vs HAVING in one picture.</b> Each bar is a row. The database actually runs the query in this order. <b>WHERE</b> throws out single rows <i>before</i> grouping. <b>HAVING</b> throws out whole groups <i>after</i> <code>GROUP BY</code>, which is why <code>COUNT(*) &gt; 5</code> has to go in HAVING.</figcaption>
+  </figure>
+
+<script type="text/plain" data-code="sql">-- 1. Filter rows
+SELECT name, salary
+FROM Employees
+WHERE department = 'IT';
+
+-- 2. Top 5 earners
+SELECT name, salary
+FROM Employees
+ORDER BY salary DESC
+LIMIT 5;
+
+-- 3. Count and average per department
+SELECT department, COUNT(*), AVG(salary)
+FROM Employees
+GROUP BY department;
+
+-- 4. Only departments with more than 5 people (HAVING filters GROUPS)
+SELECT department, COUNT(*)
+FROM Employees
+GROUP BY department
+HAVING COUNT(*) > 5;
+
+-- 5. Second highest salary (THE classic SQL question)
+SELECT MAX(salary)
+FROM Employees
+WHERE salary < (SELECT MAX(salary) FROM Employees);</script>
+  <p class="say" data-label="Say this for number 5">"The inner query finds the top salary; the outer query finds the biggest salary below it."</p>
+
+  <h4 class="mini">JOIN: combine two tables</h4>
+  <p>Say there's also <b>Departments</b>(dept_id, dept_name), and Employees has a <code>dept_id</code> column:</p>
+<script type="text/plain" data-code="sql">SELECT e.name, d.dept_name
+FROM Employees e
+INNER JOIN Departments d ON e.dept_id = d.dept_id;</script>
+  <div class="join-grid">
+    <div><div class="jt-cap">Employees</div><table class="tbl mini-t" aria-label="Employees"><thead><tr><th>name</th><th>dept_id</th></tr></thead><tbody><tr><td>Aisha</td><td>1</td></tr><tr><td>Grace</td><td>2</td></tr><tr><td>Noah</td><td class="null">NULL</td></tr></tbody></table></div>
+    <div><div class="jt-cap">Departments</div><table class="tbl mini-t" aria-label="Departments"><thead><tr><th>dept_id</th><th>dept_name</th></tr></thead><tbody><tr><td>1</td><td>IT</td></tr><tr><td>2</td><td>Sales</td></tr><tr><td>4</td><td>Finance</td></tr></tbody></table></div>
+    <div><div class="jt-cap">INNER JOIN</div><table class="tbl mini-t" aria-label="INNER JOIN"><thead><tr><th>name</th><th>dept_name</th></tr></thead><tbody><tr><td>Aisha</td><td>IT</td></tr><tr><td>Grace</td><td>Sales</td></tr></tbody></table></div>
+    <div><div class="jt-cap">LEFT JOIN</div><table class="tbl mini-t" aria-label="LEFT JOIN"><thead><tr><th>name</th><th>dept_name</th></tr></thead><tbody><tr><td>Aisha</td><td>IT</td></tr><tr><td>Grace</td><td>Sales</td></tr><tr class="hl"><td>Noah</td><td class="null">NULL</td></tr></tbody></table></div>
+  </div>
+  <ul>
+    <li><b>INNER JOIN:</b> only rows that match in both tables. Noah has no department, so Noah's row is dropped.</li>
+    <li><b>LEFT JOIN:</b> every row from the left table, with NULLs where there's no match. Noah stays, with a NULL department.</li>
+  </ul>
+
+  <h4 class="mini">Spoken one-liners</h4>
+  <ul>
+    <li><b>WHERE vs HAVING:</b> WHERE filters rows <i>before</i> grouping; HAVING filters groups <i>after</i> GROUP BY.</li>
+    <li><b>DELETE vs TRUNCATE vs DROP:</b> DELETE removes chosen rows (it can use WHERE). TRUNCATE removes every row, fast, but keeps the table. DROP deletes the whole table, structure included.</li>
+    <li><b>Normalisation:</b> splitting data into linked tables so the same thing isn't stored twice.</li>
+  </ul>
+
+  <h4 class="mini" id="playground">SQL playground</h4>
+  <div class="sqlpg" id="sqlpg">
+    <div class="sql-start">
+      <button class="btn primary" id="sql-load" type="button">▶ Start the SQL playground</button>
+      <span>A real SQLite database that runs in your browser (1.3 MB download). It works on claude.ai too.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 7 ON THE CALL ===================== -->
+<section id="call" class="sec">
+  <h2 class="sec-h"><span class="gate">7</span>On the call</h2>
+  <p class="sec-sub">This is half the score. Run through these six steps for every coding question.</p>
+
+  <p class="note"><span class="ic">⏱</span><span><b>Setup, 10 minutes before:</b> open the online compiler with the <a href="#scratch">starter template</a> already pasted in, and zoom in so they can read your screen share. Close everything else.</span></p>
+
+  <ol class="steps">
+    <li><div><b>Repeat it back</b><span><q>So I'm given ___ and need to return ___?</q></span></div></li>
+    <li><div><b>Ask one edge case</b><span><q>What if it's empty? Upper and lower case?</q></span></div></li>
+    <li><div><b>Say the plan before typing</b><span><q>I'll loop through and ___, which is O(n).</q></span></div></li>
+    <li><div><b>Talk while you type</b><span><q>This is my loop over every character… this checks whether…</q></span></div></li>
+    <li><div><b>Dry run</b><span>Walk a tiny example through your code out loud before pressing Run.</span></div></li>
+    <li><div><b>If it errors, stay calm</b><span>Read the line number out loud and fix it. That's fine; they <i>want</i> to see it.</span></div></li>
+  </ol>
+
+  <p class="say" data-label="If you get stuck">"Let me start with the simple brute-force version, then improve it." Never sit in silence.</p>
+  <p class="say" data-label="If you don't know">"I haven't covered that yet, but my understanding is ___. I'd look it up and learn it." They train you, so honesty and trainability are part of what they score.</p>
+</section>
+
+<!-- ===================== CUT ===================== -->
+<section id="cut" class="sec">
+  <h2 class="sec-h"><span class="gate">✂</span>Cut on purpose</h2>
+  <p class="sec-sub">Don't study these. If one comes up anyway, use the "I haven't covered that yet" line and move on.</p>
+  <div class="cut">
+    <span>vtable / vptr</span><span>templates</span><span>Singleton</span><span>static / inline / volatile / friend</span><span>copy constructor rules</span><span>weak_ptr detail</span><span>coding linked-list reversal</span><span>merge sorted lists</span><span>upper_bound</span><span>QuickSort worst case</span><span>array-queue drawbacks</span><span>SQL window functions</span><span>"50% of records"</span><span>1NF / 2NF / 3NF detail</span><span>ACID isolation levels</span>
+  </div>
+
+  <footer class="foot">
+    <p>Built from your mthree Amadeus guide and <code>m3 core cram.md</code>. Every solution and trap answer on this page was compiled and checked with g++ before publishing.</p>
+    <p>Run engine: Compiler Explorer API (godbolt.org), with Wandbox as backup. SQL: SQLite compiled to JavaScript (sql.js).</p>
+  </footer>
+</section>
+
+</main>
+</div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+(() => {
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
+const store = {
+  get(k) { try { return localStorage.getItem('m3cram:' + k); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem('m3cram:' + k, v); } catch (e) {} },
+  del(k) { try { localStorage.removeItem('m3cram:' + k); } catch (e) {} }
+};
+const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const HAS_HL = !!(window.hljs && window.hljs.highlight);
+const LANG = { cpp: HAS_HL && hljs.getLanguage('cpp') ? 'cpp' : 'c++', sql: 'sql' };
+function hl(code, lang) {
+  if (HAS_HL) { try { return hljs.highlight(code, { language: LANG[lang] || lang, ignoreIllegals: true }).value; } catch (e) {} }
+  return esc(code);
+}
+const srcOf = s => s ? s.textContent.replace(/^\r?\n/, '').replace(/\s+$/, '') : '';
+
+/* ---------- static code blocks ---------- */
+$$('script[type="text/plain"][data-code]').forEach(s => {
+  const pre = el('pre', 'code'); const c = el('code', 'hljs');
+  c.innerHTML = hl(srcOf(s), s.dataset.code); pre.appendChild(c);
+  s.replaceWith(pre);
+});
+
+/* ---------- editor ---------- */
+function makeEditor(initial, lang, key, onRun) {
+  const wrap = el('div', 'editor');
+  const pre = el('pre', 'ed-hl'); pre.setAttribute('aria-hidden', 'true');
+  const code = el('code', 'hljs'); pre.appendChild(code);
+  const ta = el('textarea', 'ed-ta');
+  ta.spellcheck = false;
+  ['autocapitalize', 'autocomplete', 'autocorrect'].forEach(a => ta.setAttribute(a, 'off'));
+  ta.setAttribute('aria-label', (lang === 'sql' ? 'SQL' : 'C++') + ' code editor. Ctrl+Enter runs. Press Escape then Tab to leave the editor.');
+  const inner = el('div', 'ed-in'); inner.append(pre, ta); wrap.appendChild(inner);
+  const saved = key ? store.get('code:' + key) : null;
+  ta.value = saved != null ? saved : initial;
+  const paint = () => { code.innerHTML = hl(ta.value, lang) + ' '; };
+  let t;
+  const save = () => { if (!key) return; clearTimeout(t); t = setTimeout(() => { if (ta.value === initial) store.del('code:' + key); else store.set('code:' + key, ta.value); }, 300); };
+  const insert = text => {
+    ta.focus();
+    let ok = false;
+    try { ok = document.execCommand('insertText', false, text); } catch (e) {}
+    if (!ok) { ta.setRangeText(text, ta.selectionStart, ta.selectionEnd, 'end'); ta.dispatchEvent(new Event('input')); }
+  };
+  let escArmed = false;
+  ta.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { escArmed = true; return; }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); if (onRun) onRun(); return; }
+    if (e.key === 'Tab' && !escArmed && !e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey) { e.preventDefault(); insert('    '); return; }
+    escArmed = false;
+    if (e.key === 'Enter' && !e.shiftKey && !e.altKey && !e.isComposing) {
+      const v = ta.value, pos = ta.selectionStart;
+      const line = v.slice(v.lastIndexOf('\n', pos - 1) + 1, pos);
+      let indent = (line.match(/^[ \t]*/) || [''])[0];
+      if (/[{(]\s*$/.test(line)) indent += '    ';
+      e.preventDefault(); insert('\n' + indent); return;
+    }
+    if (e.key === '}' && ta.selectionStart === ta.selectionEnd) {
+      const v = ta.value, pos = ta.selectionStart;
+      const before = v.slice(v.lastIndexOf('\n', pos - 1) + 1, pos);
+      if (/^ {4,}$/.test(before)) { e.preventDefault(); ta.setSelectionRange(pos - 4, pos); insert('}'); }
+    }
+  });
+  ta.addEventListener('input', () => { paint(); save(); });
+  paint();
+  return { wrap, ta, get: () => ta.value, set: v => { ta.value = v; paint(); save(); }, restored: saved != null && saved !== initial };
+}
+
+/* ---------- compiler back-ends ---------- */
+const stripAnsi = s => (s || '').replace(/\x1b\[[0-9;]*[A-Za-z]/g, '');
+const joinLines = a => (a || []).map(x => x.text).join('\n');
+async function timedFetch(url, opts, ms) {
+  const c = new AbortController(); const t = setTimeout(() => c.abort(), ms);
+  try { return await fetch(url, Object.assign({}, opts, { signal: c.signal })); } finally { clearTimeout(t); }
+}
+async function viaGodbolt(source) {
+  const body = { source, options: { userArguments: '-O0 -std=c++17', executeParameters: { args: [], stdin: '' }, compilerOptions: { executorRequest: true }, filters: { execute: true }, tools: [], libraries: [] }, lang: 'c++', allowStoreCodeDebug: true };
+  const r = await timedFetch('https://godbolt.org/api/compiler/g132/compile', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(body) }, 25000);
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  const j = await r.json();
+  const b = j.buildResult || {};
+  if (b.code && b.code !== 0) return { ok: false, errors: stripAnsi(joinLines(b.stderr) || joinLines(b.stdout)), engine: 'Compiler Explorer · gcc 13.2' };
+  return { ok: true, stdout: joinLines(j.stdout), stderr: stripAnsi(joinLines(j.stderr)), exit: j.code, ran: j.didExecute !== false, engine: 'Compiler Explorer · gcc 13.2' };
+}
+async function viaWandbox(source) {
+  const r = await timedFetch('https://wandbox.org/api/compile.json', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ compiler: 'gcc-13.2.0', code: source, 'compiler-option-raw': '-std=c++17' }) }, 25000);
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  const j = await r.json();
+  if (j.compiler_error && /error/.test(j.compiler_error) && j.program_output == null && j.program_error == null) return { ok: false, errors: stripAnsi(j.compiler_error), engine: 'Wandbox · gcc 13.2' };
+  return { ok: true, stdout: (j.program_output || '').replace(/\n$/, ''), stderr: (j.program_error || '') + (j.signal ? '\nSignal: ' + j.signal : ''), exit: Number(j.status || 0), ran: true, engine: 'Wandbox · gcc 13.2' };
+}
+async function compileRun(source) {
+  let last;
+  for (const fn of [viaGodbolt, viaWandbox]) { try { return await fn(source); } catch (e) { last = e; } }
+  throw last || new Error('unreachable');
+}
+function ceUrl(source) {
+  const state = { sessions: [{ id: 1, language: 'c++', source, compilers: [], executors: [{ compiler: { id: 'g132', libs: [], options: '-std=c++17' }, arguments: '', argumentsVisible: false, stdin: '', stdinVisible: false, compilerVisible: false, compilerOutputVisible: false }] }] };
+  return 'https://godbolt.org/clientstate/' + encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(state)))));
+}
+function mapLines(text, offset, userLines) {
+  let s = text.replace(/(?:<source>|prog\.cc): /g, '');
+  s = s.replace(/(?:<source>|prog\.cc):(\d+)(?::(\d+))?:/g, (m, ln, col) => {
+    const n = +ln - offset;
+    if (offset && (n < 1 || n > userLines)) return 'test code:';
+    return 'line ' + n + (col ? ':' + col : '') + ':';
+  });
+  if (offset) s = s.replace(/^(\s*)(\d+)( \|)/gm, (m, sp, ln, bar) => { const n = +ln - offset; return sp + (n >= 1 && n <= userLines ? n : '·') + bar; });
+  return s;
+}
+async function copyText(text, btn) {
+  let ok = false;
+  try { await navigator.clipboard.writeText(text); ok = true; } catch (e) {}
+  if (!ok) { const t = el('textarea'); t.value = text; t.style.cssText = 'position:fixed;opacity:0;top:0'; document.body.appendChild(t); t.select(); try { ok = document.execCommand('copy'); } catch (e) {} t.remove(); }
+  const old = btn.textContent; btn.textContent = ok ? 'Copied' : 'Copy failed'; setTimeout(() => { btn.textContent = old; }, 1400);
+}
+
+/* ---------- runners ---------- */
+const PRELUDE = '#include <iostream>\n#include <string>\n#include <vector>\n#include <unordered_map>\n#include <algorithm>\nusing namespace std;\n';
+const PRELUDE_LINES = 6;
+const CHECK = 'void check(bool ok, string testName) {\n    if (ok) cout << "PASS  " << testName << endl;\n    else    cout << "FAIL  " << testName << endl;\n}\n';
+const RUN_HTML = '▶ Run';
+
+function buildRunner(box) {
+  const kind = box.dataset.kind, id = box.dataset.id;
+  const card = box.closest('.problem');
+  let initial, tests = '', solution = '';
+  if (kind === 'problem') {
+    initial = srcOf($('script[data-role="stub"]', box)) + '\n';
+    tests = srcOf($('script[data-role="tests"]', box));
+    solution = srcOf($('script[data-role="solution"]', box));
+  } else {
+    initial = srcOf($('script[data-role="code"]', box)) + '\n';
+  }
+  box.innerHTML = '';
+  const compose = user => kind === 'problem' ? PRELUDE + user.replace(/\s+$/, '') + '\n\n' + CHECK + '\n' + tests + '\n' : user;
+  const ed = makeEditor(initial, 'cpp', id, () => run());
+  box.appendChild(ed.wrap);
+  if (ed.restored) box.appendChild(el('p', 'restored', 'Showing your saved code. <b>Reset</b> brings back the original.'));
+  const bar = el('div', 'toolbar');
+  const runBtn = el('button', 'btn primary', RUN_HTML); runBtn.type = 'button';
+  const resetBtn = el('button', 'btn', 'Reset'); resetBtn.type = 'button';
+  const copyBtn = el('button', 'btn', 'Copy'); copyBtn.type = 'button';
+  const ce = el('a', 'btn', 'Compiler Explorer ↗'); ce.target = '_blank'; ce.rel = 'noopener'; ce.href = '#';
+  bar.append(runBtn, resetBtn, copyBtn, ce, el('span', 'kbd-hint', 'Ctrl+Enter to run'));
+  box.appendChild(bar);
+  const out = el('div', 'out'); out.hidden = true; out.setAttribute('aria-live', 'polite');
+  box.appendChild(out);
+  if (kind === 'problem') {
+    const d1 = el('details', 'reveal', '<summary>Tests that run on your code</summary>');
+    const b1 = el('div', 'body'); const p1 = el('pre', 'code'); p1.innerHTML = '<code class="hljs">' + hl(tests, 'cpp') + '</code>'; b1.appendChild(p1);
+    b1.appendChild(el('p', '', '<small>The headers, <code>using namespace std;</code> and a <code>check()</code> helper are added above these for you. Some tests can pass before you write anything (a stub that returns <code>false</code>); they only count once your real code is in.</small>'));
+    d1.appendChild(b1);
+    const d2 = el('details', 'reveal', '<summary>Show solution</summary>');
+    const b2 = el('div', 'body'); const p2 = el('pre', 'code'); p2.innerHTML = '<code class="hljs">' + hl(solution, 'cpp') + '</code>'; b2.appendChild(p2);
+    d2.appendChild(b2);
+    box.append(d1, d2);
+    if (card && store.get('done:' + id)) card.classList.add('done');
+  }
+  runBtn.addEventListener('click', () => run());
+  resetBtn.addEventListener('click', () => { if (ed.get() !== initial && !confirm('Reset this editor to the original code? Your changes here will be lost.')) return; ed.set(initial); out.hidden = true; const r = $('.restored', box); if (r) r.remove(); });
+  copyBtn.addEventListener('click', () => copyText(compose(ed.get()), copyBtn));
+  ce.addEventListener('click', () => { ce.href = ceUrl(compose(ed.get())); });
+
+  let busy = false;
+  async function run() {
+    if (busy) return; busy = true;
+    runBtn.disabled = true; runBtn.innerHTML = '<span class="spin"></span>Running';
+    const user = ed.get(); const source = compose(user);
+    const offset = kind === 'problem' ? PRELUDE_LINES : 0;
+    const userLines = user.replace(/\s+$/, '').split('\n').length;
+    out.hidden = false;
+    out.innerHTML = '<div class="out-head"><span>Compiling…</span></div><pre class="dim">Sending your code to the compiler…</pre>';
+    try {
+      const res = await compileRun(source);
+      render(res, offset, userLines);
+    } catch (e) {
+      out.innerHTML = '';
+      out.appendChild(el('div', 'out-head warn', '<span>Couldn\'t reach the compiler</span>'));
+      const body = el('div', 'out-body');
+      body.innerHTML = '<p>Pages on claude.ai aren\'t allowed to call outside services, so in-page Run only works in the copy saved on your laptop (<b>mthree-cram.html</b> in your ECA interview folder). If you <i>are</i> on your laptop, check your internet connection.</p><p>One click opens this exact code in Compiler Explorer, where it runs on the right-hand side:</p>';
+      const a = el('a', 'btn primary', 'Open in Compiler Explorer ↗'); a.href = ceUrl(source); a.target = '_blank'; a.rel = 'noopener';
+      body.appendChild(a);
+      out.appendChild(body);
+    } finally {
+      busy = false; runBtn.disabled = false; runBtn.innerHTML = RUN_HTML;
+    }
+  }
+  function render(res, offset, userLines) {
+    out.innerHTML = '';
+    if (!res.ok) {
+      out.appendChild(el('div', 'out-head fail', '<span>Compile error</span><span style="font-size:12px;opacity:.8">read the first error first</span>'));
+      const lines = mapLines(res.errors, offset, userLines).split('\n').map(l => /error:/.test(l) ? '<span class="row-err">' + esc(l) + '</span>' : esc(l));
+      out.appendChild(el('pre', '', lines.join('\n')));
+      out.appendChild(el('div', 'out-foot', esc(res.engine) + (offset ? ' · line numbers match your editor' : '')));
+      return;
+    }
+    const stdout = res.stdout || '';
+    const crashed = res.exit !== 0 && res.exit != null;
+    if (kind === 'problem') {
+      const lines = stdout.split('\n');
+      const pass = lines.filter(l => l.startsWith('PASS')).length;
+      const fail = lines.filter(l => l.startsWith('FAIL')).length;
+      const total = pass + fail;
+      const allPass = total > 0 && fail === 0 && !crashed;
+      const head = allPass ? 'All ' + total + ' tests passed' : total ? pass + ' of ' + total + ' tests passed' : 'No test results';
+      out.appendChild(el('div', 'out-head ' + (allPass ? 'pass' : 'fail'), '<span>' + (allPass ? '✓ ' : '') + head + '</span>' + (allPass ? '<span style="font-size:12px;opacity:.85">cleared for take-off</span>' : '')));
+      const html = lines.map(l => l.startsWith('PASS') ? '<span class="row-pass">✓ ' + esc(l.slice(6)) + '</span>' : l.startsWith('FAIL') ? '<span class="row-fail">✗ ' + esc(l.slice(6)) + '</span>' : esc(l)).join('\n');
+      out.appendChild(el('pre', '', html || '<span class="dim">(no output)</span>'));
+      if (allPass && card) { card.classList.add('done'); store.set('done:' + id, '1'); }
+    } else {
+      out.appendChild(el('div', 'out-head' + (crashed ? ' fail' : ''), '<span>' + (crashed ? 'Program stopped with an error' : 'Output') + '</span>'));
+      out.appendChild(el('pre', '', stdout ? esc(stdout) : '<span class="dim">(no output)</span>'));
+    }
+    const extra = (res.stderr || '').trim();
+    if (extra || crashed) out.appendChild(el('pre', 'row-err', esc(extra || '') + (crashed ? (extra ? '\n' : '') + 'Exit code ' + res.exit + (kind === 'problem' ? ': your code crashed before every test could run (often an index out of range).' : '') : '')));
+    out.appendChild(el('div', 'out-foot', esc(res.engine)));
+  }
+}
+$$('.runner').forEach(buildRunner);
+
+/* ---------- traps ---------- */
+$$('.trap').forEach(card => {
+  const s = $('script[data-trap-run]', card); if (!s) return;
+  const source = srcOf(s) + '\n'; s.remove();
+  const bar = el('div', 'toolbar');
+  const btn = el('button', 'btn', '▶ Run it'); btn.type = 'button';
+  const ce = el('a', 'btn', 'Compiler Explorer ↗'); ce.href = ceUrl(source); ce.target = '_blank'; ce.rel = 'noopener';
+  bar.append(btn, ce); card.appendChild(bar);
+  const out = el('div', 'out'); out.hidden = true; out.style.marginBottom = '10px'; card.appendChild(out);
+  btn.addEventListener('click', async () => {
+    btn.disabled = true; btn.innerHTML = '<span class="spin"></span>Running';
+    out.hidden = false; out.innerHTML = '<div class="out-head"><span>Compiling…</span></div>';
+    try {
+      const r = await compileRun(source);
+      out.innerHTML = '<div class="out-head"><span>Output</span></div><pre>' + esc(r.ok ? (r.stdout || '(no output)') : r.errors) + '</pre><div class="out-foot">' + esc(r.engine) + '</div>';
+    } catch (e) {
+      out.innerHTML = '<div class="out-head warn"><span>Couldn\'t reach the compiler</span></div><div class="out-body"><p>Use the Compiler Explorer button to run it there instead.</p></div>';
+    } finally { btn.disabled = false; btn.innerHTML = '▶ Run it'; }
+  });
+});
+
+/* ---------- Big-O chart ---------- */
+(function bigO() {
+  const fig = $('#bigo'); if (!fig) return;
+  const svg = $('svg', fig), tip = $('.tip', fig), viz = $('.viz', fig);
+  const NS = 'http://www.w3.org/2000/svg';
+  const mk = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); (parent || svg).appendChild(e); return e; };
+  const L = 46, R = 500, T = 32, B = 262, NMAX = 16, YMAX = 40;
+  const xs = n => L + (n - 1) / (NMAX - 1) * (R - L);
+  const ys = v => B - v / YMAX * (B - T);
+  const S = [
+    { k: 'O(1)', f: () => 1, c: 'var(--s1)' },
+    { k: 'O(log n)', f: n => Math.log2(n), c: 'var(--s2)' },
+    { k: 'O(n)', f: n => n, c: 'var(--s3)' },
+    { k: 'O(n log n)', f: n => n * Math.log2(n), c: 'var(--s4)' },
+    { k: 'O(n²)', f: n => n * n, c: 'var(--s5)' }
+  ];
+  [0, 10, 20, 30, 40].forEach(v => {
+    mk('line', { x1: L, x2: R, y1: ys(v), y2: ys(v), class: v === 0 ? 'ax' : 'gl' });
+    const t = mk('text', { x: L - 8, y: ys(v) + 4, 'text-anchor': 'end' }); t.textContent = v;
+  });
+  [1, 4, 8, 12, 16].forEach(n => { const t = mk('text', { x: xs(n), y: B + 18, 'text-anchor': 'middle' }); t.textContent = n; });
+  const yl = mk('text', { x: L - 8, y: T - 18, 'text-anchor': 'end' }); yl.textContent = 'steps';
+  const xl = mk('text', { x: R, y: B + 34, 'text-anchor': 'end' }); xl.textContent = 'input size n →';
+  const defs = mk('defs', {});
+  const cp = mk('clipPath', { id: 'bigo-clip' }, defs); mk('rect', { x: L - 2, y: T, width: R - L + 4, height: B - T + 2 }, cp);
+  const g = mk('g', { 'clip-path': 'url(#bigo-clip)' });
+  S.forEach(s => {
+    let d = '';
+    for (let n = 1; n <= NMAX + 1e-9; n += 0.1) { const v = Math.min(s.f(n), YMAX * 1.3); d += (d ? 'L' : 'M') + xs(n).toFixed(1) + ',' + ys(v).toFixed(1); }
+    mk('path', { d, class: 'sr', stroke: s.c }, g);
+  });
+  S.forEach(s => {
+    let x, y;
+    if (s.f(NMAX) <= YMAX) { x = R + 8; y = ys(s.f(NMAX)) + 4; }
+    else { let n = 1; while (s.f(n) < YMAX) n += 0.01; x = xs(n) + 8; y = T + 14; }
+    mk('circle', { cx: x + 3, cy: y - 4, r: 3.5, fill: s.c });
+    const t = mk('text', { x: x + 11, y, class: 'lbl' }); t.textContent = s.k;
+  });
+  const xh = mk('line', { x1: 0, x2: 0, y1: T, y2: B, class: 'xh', visibility: 'hidden' });
+  const dots = S.map(s => mk('circle', { r: 5, fill: s.c, class: 'hd', visibility: 'hidden' }));
+  const hit = mk('rect', { x: L, y: T, width: R - L, height: B - T, fill: 'transparent', style: 'cursor:crosshair' });
+  const fmt = v => Number.isInteger(v) ? String(v) : v.toFixed(1);
+  function show(evt) {
+    const p = svg.createSVGPoint(); p.x = evt.clientX; p.y = evt.clientY;
+    const loc = p.matrixTransform(svg.getScreenCTM().inverse());
+    const n = Math.max(1, Math.min(NMAX, Math.round(1 + (loc.x - L) / (R - L) * (NMAX - 1))));
+    const x = xs(n);
+    xh.setAttribute('x1', x); xh.setAttribute('x2', x); xh.setAttribute('visibility', 'visible');
+    S.forEach((s, i) => { const v = s.f(n); if (v <= YMAX) { dots[i].setAttribute('cx', x); dots[i].setAttribute('cy', ys(v)); dots[i].setAttribute('visibility', 'visible'); } else dots[i].setAttribute('visibility', 'hidden'); });
+    tip.innerHTML = '<div class="tn">n = ' + n + '</div>' + S.slice().reverse().map(s => { const v = s.f(n); return '<div class="tr"><i style="background:' + s.c + '"></i>' + s.k + '<b>' + fmt(v) + (v > YMAX ? ' <span class="off">↑</span>' : '') + '</b></div>'; }).join('');
+    tip.hidden = false;
+    const scale = svg.getBoundingClientRect().width / 580;
+    const px = x * scale, w = tip.offsetWidth, vw = viz.clientWidth;
+    tip.style.left = (px + 14 + w > vw ? px - 14 - w : px + 14) + 'px';
+  }
+  function hide() { tip.hidden = true; xh.setAttribute('visibility', 'hidden'); dots.forEach(d => d.setAttribute('visibility', 'hidden')); }
+  hit.addEventListener('pointermove', show);
+  hit.addEventListener('pointerdown', show);
+  hit.addEventListener('pointerleave', hide);
+})();
+
+/* ---------- plan checklist ---------- */
+(function plan() {
+  const boxes = $$('input[data-plan]');
+  const upd = () => { const done = boxes.filter(b => b.checked).length; $('#plan-count').textContent = done + ' / ' + boxes.length + ' done'; $('#plan-bar').style.width = (done / boxes.length * 100) + '%'; };
+  boxes.forEach(b => { b.checked = store.get('plan:' + b.dataset.plan) === '1'; b.addEventListener('change', () => { if (b.checked) store.set('plan:' + b.dataset.plan, '1'); else store.del('plan:' + b.dataset.plan); upd(); }); });
+  upd();
+})();
+
+/* ---------- nav highlight ---------- */
+(function nav() {
+  const nav = $('.toc'); const links = $$('.toc a');
+  const byId = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
+  if (!('IntersectionObserver' in window)) return;
+  const io = new IntersectionObserver(es => {
+    es.forEach(en => {
+      if (!en.isIntersecting) return;
+      const a = byId.get(en.target.id); if (!a) return;
+      links.forEach(l => l.classList.toggle('on', l === a));
+      if (nav.scrollWidth > nav.clientWidth + 4) nav.scrollTo({ left: a.parentElement.offsetLeft - 16, behavior: 'smooth' });
+    });
+  }, { rootMargin: '-25% 0px -70% 0px' });
+  $$('main > section[id]').forEach(s => io.observe(s));
+})();
+
+/* ---------- SQL playground ---------- */
+(function sql() {
+  const root = $('#sqlpg'), btn = $('#sql-load'); if (!root || !btn) return;
+  const SEED = `CREATE TABLE Departments (dept_id INTEGER PRIMARY KEY, dept_name TEXT);
+INSERT INTO Departments VALUES (1,'IT'),(2,'Sales'),(3,'HR'),(4,'Finance');
+CREATE TABLE Employees (emp_id INTEGER PRIMARY KEY, name TEXT, department TEXT, salary INTEGER, dept_id INTEGER REFERENCES Departments(dept_id));
+INSERT INTO Employees VALUES
+(1,'Aisha','IT',52000,1),(2,'Ben','IT',48000,1),(3,'Chen','IT',61000,1),(4,'Dara','IT',45000,1),(5,'Eli','IT',58000,1),(6,'Femi','IT',50000,1),
+(7,'Grace','Sales',39000,2),(8,'Hugo','Sales',42000,2),(9,'Isla','Sales',47000,2),
+(10,'Jay','HR',41000,3),(11,'Kemi','HR',44000,3),
+(12,'Leo','Finance',65000,4),(13,'Maya','Finance',61000,4),
+(14,'Noah','Ops',38000,NULL);`;
+  const P = [
+    ['All rows', 'SELECT * FROM Employees;'],
+    ['1 · WHERE', "SELECT name, salary\nFROM Employees\nWHERE department = 'IT';"],
+    ['2 · Top 5', 'SELECT name, salary\nFROM Employees\nORDER BY salary DESC\nLIMIT 5;'],
+    ['3 · GROUP BY', 'SELECT department, COUNT(*), AVG(salary)\nFROM Employees\nGROUP BY department;'],
+    ['4 · HAVING', 'SELECT department, COUNT(*)\nFROM Employees\nGROUP BY department\nHAVING COUNT(*) > 5;'],
+    ['5 · 2nd highest', 'SELECT MAX(salary)\nFROM Employees\nWHERE salary < (SELECT MAX(salary) FROM Employees);'],
+    ['INNER JOIN', 'SELECT e.name, d.dept_name\nFROM Employees e\nINNER JOIN Departments d ON e.dept_id = d.dept_id;'],
+    ['LEFT JOIN', 'SELECT e.name, d.dept_name\nFROM Employees e\nLEFT JOIN Departments d ON e.dept_id = d.dept_id;']
+  ];
+  const loadScript = src => new Promise((ok, bad) => { const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = () => bad(new Error('load failed')); document.head.appendChild(s); });
+  btn.addEventListener('click', async () => {
+    btn.disabled = true; btn.innerHTML = '<span class="spin"></span>Loading';
+    try {
+      if (!window.initSqlJs) await loadScript('https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-asm.js');
+      const SQL = await window.initSqlJs();
+      let db = new SQL.Database(); db.run(SEED);
+      root.innerHTML = '';
+      root.appendChild(el('p', '', '<b>Tables:</b> <code>Employees</code>(emp_id, name, department, salary, dept_id) and <code>Departments</code>(dept_id, dept_name). 14 employees; IT has 6. Pick a query, or type your own.'));
+      const presets = el('div', 'presets'); root.appendChild(presets);
+      const ed = makeEditor(P[1][1], 'sql', 'sql', () => runQ());
+      root.appendChild(ed.wrap);
+      const bar = el('div', 'toolbar');
+      const runB = el('button', 'btn primary', '▶ Run query'); runB.type = 'button';
+      const resetB = el('button', 'btn', 'Reset data'); resetB.type = 'button';
+      bar.append(runB, resetB, el('span', 'kbd-hint', 'Ctrl+Enter to run'));
+      root.appendChild(bar);
+      const out = el('div', 'sql-out'); out.setAttribute('aria-live', 'polite'); root.appendChild(out);
+      P.forEach(([label, q]) => { const b = el('button', '', esc(label)); b.type = 'button'; b.addEventListener('click', () => { $$('button', presets).forEach(x => x.classList.toggle('on', x === b)); ed.set(q); runQ(); }); presets.appendChild(b); });
+      function runQ() {
+        out.innerHTML = '';
+        try {
+          const res = db.exec(ed.get());
+          if (!res.length) { out.appendChild(el('p', 'meta', 'Query ran. No rows to show.')); return; }
+          res.forEach(r => {
+            const w = el('div', 'tbl-wrap'); const t = el('table', 'tbl');
+            t.innerHTML = '<thead><tr>' + r.columns.map(c => '<th>' + esc(String(c)) + '</th>').join('') + '</tr></thead><tbody>' +
+              r.values.map(row => '<tr>' + row.map(v => v === null ? '<td class="null">NULL</td>' : '<td>' + esc(typeof v === 'number' && !Number.isInteger(v) ? v.toFixed(2) : String(v)) + '</td>').join('') + '</tr>').join('') + '</tbody>';
+            w.appendChild(t); out.appendChild(w);
+            out.appendChild(el('p', 'meta', r.values.length + (r.values.length === 1 ? ' row' : ' rows')));
+          });
+        } catch (e) { out.appendChild(el('div', 'err', esc(String(e.message || e)))); }
+      }
+      runB.addEventListener('click', runQ);
+      resetB.addEventListener('click', () => { db.close(); db = new SQL.Database(); db.run(SEED); out.innerHTML = ''; out.appendChild(el('p', 'meta', 'Data reset to the original 14 employees.')); });
+      runQ();
+    } catch (e) {
+      btn.disabled = false; btn.textContent = 'Retry loading the playground';
+      if (!$('.err', root)) root.appendChild(el('p', 'err', 'Couldn\'t load the SQL engine. Check your connection and try again.'));
+    }
+  });
+})();
+})();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+}
+</script>
