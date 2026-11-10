@@ -252,6 +252,26 @@ figcaption b{color:var(--fg)}
 .basics h4 code{text-transform:none;font:600 .8em var(--mono);font-variant-ligatures:none;background:var(--surface-2);border:1px solid var(--line);padding:1px 6px;border-radius:5px}
 .basics > :last-child{margin-bottom:0}
 @media (max-width:560px){.basics{padding:14px 12px}}
+.basics ol.route{padding-left:24px;margin:10px 0}
+.basics ol.route li{margin:8px 0}
+.checkme{border:1px dashed var(--muted);border-radius:12px;padding:14px 14px 8px;margin:22px 0 0;background:var(--surface-2)}
+.checkme .c-lbl{display:block;font:700 13px/1 var(--display);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.checkme .cq{margin:12px 0 6px;font-weight:700}
+.checkme .lbl{margin:16px 0 -4px;font:700 13px/1 var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.small{font-size:14px;color:var(--muted)}
+details.reveal .out{margin:0 0 4px}
+details.reveal{margin:6px 0 10px}
+@media (max-width:560px){.checkme code{white-space:normal;overflow-wrap:anywhere}}
+.res{max-width:360px;margin:6px 0 16px}
+.res.wide{max-width:520px}
+.who td:not(:first-child),.who th:not(:first-child){text-align:center}
+.who .y{font-weight:700}
+.who .n{color:var(--muted)}
+.shapes{display:grid;grid-template-columns:minmax(0,1fr);gap:4px 18px;margin:12px 0 6px}
+.shapes > div{min-width:0}
+.shapes .jt-cap{padding:8px 0 0}
+.shapes p{margin:6px 0 8px;font-size:15px;color:var(--muted)}
+@media (min-width:760px){.shapes{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
 
 /* runner */
 @media (max-width:640px){.ed-hl,.ed-ta{font-size:16px;padding:12px}}
@@ -401,6 +421,20 @@ footer.foot{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);co
     <div class="tile"><b>Write a function that runs</b><span>Simple and working beats clever and half-done.</span></div>
   </div>
 
+  <div class="basics" id="short">
+    <span class="b-lbl">Behind? Do these first</span>
+    <p><b>You don't need the whole page.</b> These five things carry most of the interview. Do them in this order, and stop wherever the time runs out.</p>
+    <ol class="route">
+      <li><b>Four spoken answers,</b> said out loud until they're easy: <a href="#t-ptr">pointer vs reference</a>, <a href="#t-pass">pass by value vs reference</a>, <a href="#t-mem">stack vs heap</a>, <a href="#t-oop">the 4 pillars</a>.</li>
+      <li><b>One class from memory:</b> <a href="#oop-a">BankAccount</a>. Twenty lines that cover private, public, the constructor and a getter.</li>
+      <li><b>Two functions from memory:</b> <a href="#drill0">Drill 0</a>, then <a href="#p1">reverse a string</a>. Read the <a href="#coding">Start here</a> box in gate 4 first.</li>
+      <li><b>SQL in ten minutes:</b> the <a href="#sql">Start here</a> box in gate 6, then query 5.</li>
+      <li><b>One timed mock:</b> <a href="https://mkrm12.github.io/cpp-notes/mock1.html">Mock interview 1</a>. Do <a href="https://mkrm12.github.io/cpp-notes/mock2.html">Mock interview 2</a> if there's time left.</li>
+    </ol>
+    <p><b>Leave for last:</b> RAII (2.4), data structures (2.6), Big-O beyond "one loop is O(n)", and Problems 2 to 4.</p>
+    <p><b>Reading isn't the same as knowing.</b> Each hard topic opens with a yellow-bordered <b>Start here</b> box that reads the code one line at a time, and closes with <b>Check yourself</b>. Cover the answer, say yours out loud, then open it. If you got it wrong, re-read that one box and try again.</p>
+  </div>
+
   <h4 class="mini" id="plan">Your time plan</h4>
   <div class="progress"><span id="plan-count">0 / 7 done</span><span class="bar"><i id="plan-bar"></i></span></div>
   <div class="plan">
@@ -467,9 +501,80 @@ int* ptr = &x;    // ptr stores x's address
 <!-- ===================== 2 THEORY ===================== -->
 <section id="theory" class="sec">
   <h2 class="sec-h"><span class="gate">2</span>Theory</h2>
-  <p class="sec-sub">Seven topics. Read the yellow "Say this" boxes <b>out loud</b> until they come out naturally. That's the answer you give.</p>
+  <p class="sec-sub">Seven topics and a quick-fire table. The hard ones open with a <b>Start here</b> box: read that first. Then read the yellow "Say this" boxes <b>out loud</b> until they come out naturally. That's the answer you give.</p>
 
   <h3 class="topic" id="t-ptr"><span class="n">2.1</span>Pointer vs reference</h3>
+  <div class="basics">
+    <span class="b-lbl">Start here: the basics</span>
+    <p><b>The code looks worse than it is.</b> There are only two symbols, <code>&amp;</code> and <code>*</code>, and one rule for reading them. Four small steps.</p>
+
+    <h4><span class="st">1</span>Every variable is a box with an address</h4>
+<script type="text/plain" data-code="cpp">int x = 20;     // a box called x, with 20 inside
+
+cout << x;      // 20          what is IN the box
+cout << &x;     // 0x61ff0c    WHERE the box is (its address in memory)</script>
+    <p>A variable has two things: its <b>value</b> and its <b>address</b>. Writing <code>&amp;x</code> asks "where does x live?". The address is just a number, printed in a strange format. You never need to know what the number is.</p>
+
+    <h4><span class="st">2</span>A reference: a second name for the same box</h4>
+<script type="text/plain" data-code="cpp">int x = 20;
+int& ref = x;   // read it as: "ref is another name for x"
+
+ref = 30;       // no symbol needed: use ref like a normal variable
+cout << x;      // 30   <- x changed, because ref IS x</script>
+    <p>The <code>&amp;</code> appears <b>once</b>, on the line that creates <code>ref</code>. After that line you never write a symbol again. There is still only one box. It just has two names.</p>
+
+    <h4><span class="st">3</span>A pointer: a separate box that holds an address</h4>
+<script type="text/plain" data-code="cpp">int x = 20;
+int* ptr = &x;  // read it as: "ptr holds the address of x"
+
+*ptr = 40;      // read it as: "go to that address and put 40 there"
+cout << x;      // 40
+
+cout << ptr;    // 0x61ff0c   the address it holds
+cout << *ptr;   // 40         follow the address, read what's there</script>
+    <p><code>ptr</code> on its own is an address. <code>*ptr</code> means "follow it". If you forget the star and write <code>ptr = 40;</code>, you're trying to change the address, not x, and it won't compile.</p>
+
+    <h4><span class="st">4</span>The one rule for reading <code>&amp;</code> and <code>*</code></h4>
+    <p><b>Next to a type</b> (<code>int</code>, <code>string</code>…), the symbol says what the new variable <b>is</b>. <b>Anywhere else</b>, it <b>does</b> something.</p>
+    <div class="tbl-wrap"><table class="tbl kw">
+      <thead><tr><th>You see</th><th>Next to a type?</th><th>Read it as</th></tr></thead>
+      <tbody>
+        <tr><td class="big">int&amp; ref = x;</td><td>Yes</td><td><code>ref</code> <b>is</b> a reference: another name for x</td></tr>
+        <tr><td class="big">int* ptr = &amp;x;</td><td>Yes</td><td><code>ptr</code> <b>is</b> a pointer: it holds an address</td></tr>
+        <tr><td class="big">&amp;x</td><td>No</td><td><b>Get</b> the address of x</td></tr>
+        <tr><td class="big">*ptr</td><td>No</td><td><b>Follow</b> the address to the value</td></tr>
+        <tr><td class="big">ptr-&gt;name</td><td>No</td><td>Follow the address, then take <code>name</code>. Same as <code>(*ptr).name</code></td></tr>
+      </tbody>
+    </table></div>
+    <p><b>Which one will you actually write?</b> References, nearly always: every coding problem takes <code>const string&amp; s</code> or <code>const vector&lt;int&gt;&amp; v</code>. Pointers show up in two places on this page: with <code>new</code> (2.3) and as <code>Animal*</code> (gate 3B).</p>
+
+    <div class="checkme">
+      <span class="c-lbl">Check yourself</span>
+      <p class="cq">1. What does this print? Go line by line and keep track of <code>a</code> and <code>b</code> on paper.</p>
+<script type="text/plain" data-code="cpp">int a = 5;
+int b = 9;
+int& r = a;
+int* p = &b;
+
+r = 7;
+*p = 1;
+p = &a;
+*p = 2;
+cout << a << " " << b << " " << r;</script>
+      <details class="reveal"><summary>Reveal answer</summary><div class="body"><p>Prints <b>2 1 2</b>.</p>
+        <ul>
+          <li><code>r = 7;</code> → r is another name for a, so <b>a is 7</b>.</li>
+          <li><code>*p = 1;</code> → p holds b's address, so <b>b is 1</b>.</li>
+          <li><code>p = &amp;a;</code> → no star, so this changes the <i>address</i>: p now points at a. (A pointer can be re-pointed. A reference can't.)</li>
+          <li><code>*p = 2;</code> → follow p to a, so <b>a is 2</b>. And r is a, so r is 2 too.</li>
+        </ul></div></details>
+      <p class="cq">2. Say it: what does <code>&amp;</code> mean in <code>int&amp; r = a;</code>, and what does it mean in <code>p = &amp;a;</code>?</p>
+      <details class="reveal"><summary>Reveal answer</summary><div class="body"><p>In the first it's next to a type, so it means "r <b>is</b> a reference". In the second it isn't, so it means "<b>get</b> the address of a".</p></div></details>
+      <p class="cq">3. Say it: name two things a pointer can do that a reference can't.</p>
+      <details class="reveal"><summary>Reveal answer</summary><div class="body"><p>It can be <b>null</b> (point at nothing, <code>nullptr</code>), and it can be <b>re-pointed</b> at something else later. A reference must be attached to a variable when it's created and stays attached for good.</p></div></details>
+    </div>
+  </div>
+  <p><b>Now the interview version.</b> It's those four steps in one breath:</p>
   <p class="say">"A reference is an alias, another name for an existing variable. It must be set when it's created, it can't be null, and it can't be changed to refer to something else. A pointer is a variable that stores a memory address. It can be null, it can be re-pointed, and you use <code>*</code> to get at the value. I use references by default, especially for function parameters, and pointers when something might be null or needs to change what it points at."</p>
 
   <figure class="fig">
@@ -524,22 +629,12 @@ int main() {
 }</script>
   <div class="out"><div class="out-head"><span>Output</span></div><pre>x = 30
 x = 40
-&amp;x   = 0x78013ffb24
-&amp;ref = 0x78013ffb24
-ptr  = 0x78013ffb24
-&amp;ptr = 0x78013ffb18</pre><div class="out-foot">The addresses change every run. What matters is which ones match.</div></div>
+&amp;x   = 0x10521ffc94
+&amp;ref = 0x10521ffc94
+ptr  = 0x10521ffc94
+&amp;ptr = 0x10521ffc88</pre><div class="out-foot">The addresses change every run. What matters is which ones match.</div></div>
 
-  <p><b>The <code>&amp;</code> / <code>*</code> confusion.</b> Each symbol has two jobs, depending on where it sits:</p>
-  <div class="tbl-wrap"><table class="tbl">
-    <thead><tr><th>You write</th><th>Where</th><th>Meaning</th></tr></thead>
-    <tbody>
-      <tr><td class="big">int&amp; r = x;</td><td>in a declaration</td><td><code>r</code> is a <b>reference</b> to x</td></tr>
-      <tr><td class="big">&amp;x</td><td>in front of a variable</td><td><b>address of</b> x</td></tr>
-      <tr><td class="big">int* p = &amp;x;</td><td>in a declaration</td><td><code>p</code> is a <b>pointer</b> to an int</td></tr>
-      <tr><td class="big">*p</td><td>in front of a pointer</td><td><b>dereference</b>: the value at that address</td></tr>
-      <tr><td class="big">p-&gt;name</td><td>pointer to an object</td><td>same as <code>(*p).name</code></td></tr>
-    </tbody>
-  </table></div>
+  <p>That program prints four addresses. <code>&amp;x</code>, <code>&amp;ref</code> and <code>ptr</code> all come out the same, and <code>&amp;ptr</code> comes out different, because the pointer is its own box.</p>
 
   <h3 class="topic" id="t-pass"><span class="n">2.2</span>Pass by value vs reference vs const reference</h3>
   <div class="basics">
@@ -844,6 +939,23 @@ void demo() {
     </tbody>
   </table></div>
   <p class="say" data-label="Say this after every solution">"This is O(n) time because I loop through the input once."</p>
+
+  <h3 class="topic" id="t-quick"><span class="n">2.8</span>Quick-fire one-liners</h3>
+  <p>Some interviewers fire short questions. A short question gets a short answer: one or two sentences, then stop talking.</p>
+  <div class="tbl-wrap"><table class="tbl">
+    <thead><tr><th>They ask</th><th>You say</th></tr></thead>
+    <tbody>
+      <tr><td><b>What does <code>const</code> mean?</b></td><td>"The value can't be changed after it's set, and the compiler enforces that. I put it on reference parameters I only read, like <code>const string&amp; s</code>."</td></tr>
+      <tr><td><b>What is <code>nullptr</code>?</b></td><td>"A pointer that points at nothing. I check for it before using <code>*</code>, because following a null pointer crashes the program."</td></tr>
+      <tr><td><b><code>struct</code> vs <code>class</code>?</b></td><td>"The same thing with different defaults. In a struct everything is public unless you say otherwise. In a class everything is private unless you say otherwise."</td></tr>
+      <tr><td><b>What is a constructor?</b></td><td>"A special function with the same name as the class and no return type. It runs automatically when an object is created and sets its starting values."</td></tr>
+      <tr><td><b>And a destructor?</b></td><td>"The opposite: <code>~ClassName()</code>. It runs automatically when the object is destroyed, and it's where you clean up."</td></tr>
+      <tr><td><b>Array vs <code>vector</code>?</b></td><td>"An array has a fixed size. A vector grows when you <code>push_back</code>, and it knows its own <code>size()</code>. I use a vector by default."</td></tr>
+      <tr><td><b><code>=</code> vs <code>==</code>?</b></td><td>"One equals sign assigns a value. Two compare two values."</td></tr>
+      <tr><td><b>Compile error vs runtime error?</b></td><td>"A compile error is caught before the program runs, like a missing semicolon. A runtime error happens while it's running, like reading past the end of a vector."</td></tr>
+    </tbody>
+  </table></div>
+  <p>Memory leak and dangling pointer are in <a href="#t-mem">2.3</a>. <code>map</code> vs <code>unordered_map</code> is in <a href="#t-ds">2.6</a>.</p>
 </section>
 
 <!-- ===================== 3 OOP CODE ===================== -->
@@ -851,7 +963,113 @@ void demo() {
   <h2 class="sec-h"><span class="gate">3</span>OOP code</h2>
   <p class="sec-sub">The only two class snippets you need. Read each one, then cover it and write it out from memory. The dark box under each one is exactly what it prints.</p>
 
-  <h3 class="topic">A · Encapsulation: a class with private data</h3>
+  <h3 class="topic" id="oop-a">A · Encapsulation: a class with private data</h3>
+  <div class="basics">
+    <span class="b-lbl">Start here: the basics</span>
+    <p><b>Classes look odd until you see why each piece is there.</b> This builds the BankAccount class in four steps, adding one idea at a time.</p>
+
+    <h4><span class="st">1</span>A class is a blueprint. An object is one thing built from it.</h4>
+<script type="text/plain" data-code="cpp">class Account {
+public:
+    double balance;       // every Account has a balance
+};                        // <- a class ends with };  (the ; is easy to forget)
+
+int main() {
+    Account a;            // a is an OBJECT: one real account
+    Account b;            // another one, with its own balance
+
+    a.balance = 100;      // the dot means "a's balance"
+    b.balance = 5;
+    cout << a.balance;    // 100
+}</script>
+    <p>You already write <code>int x;</code>, where <code>int</code> is the type and <code>x</code> is the variable. This is the same thing: <code>Account</code> is a type that <b>you</b> made, and <code>a</code> is a variable of that type. The dot reaches inside an object.</p>
+
+    <h4><span class="st">2</span>The problem with <code>public</code></h4>
+<script type="text/plain" data-code="cpp">a.balance = -5000;    // allowed. Nothing stops it.</script>
+    <p><code>public:</code> means any code, anywhere, can read <b>and change</b> what's below it. For a bank balance that's a bug waiting to happen.</p>
+
+    <h4><span class="st">3</span><code>private</code> locks the data. Public functions are the door.</h4>
+<script type="text/plain" data-code="cpp">class Account {
+private:
+    double balance;                 // only code INSIDE this class can touch it
+
+public:
+    void deposit(double amount) {   // a function that lives inside the class
+        if (amount > 0) {           // the class decides what's allowed
+            balance += amount;      // inside the class: fine
+        }
+    }
+
+    double getBalance() {           // a "getter": lets others LOOK, not change
+        return balance;
+    }
+};
+
+int main() {
+    Account a;
+    a.deposit(50);                  // fine: deposit is public
+    cout << a.getBalance();         // fine: getBalance is public
+    // a.balance = -5000;           // COMPILE ERROR: balance is private
+}</script>
+    <p>A label like <code>private:</code> or <code>public:</code> covers <b>everything below it</b>, until the next label. The habit to copy: <b>data private, functions public.</b> Now the only way to change the balance is through <code>deposit()</code>, and <code>deposit()</code> checks the amount first. That is encapsulation.</p>
+
+    <h4><span class="st">4</span>The constructor gives it a starting value</h4>
+    <p>In step 3 nobody ever said what the balance starts at, so it holds a garbage number. A constructor fixes that.</p>
+<script type="text/plain" data-code="cpp">class Account {
+private:
+    double balance;
+
+public:
+    Account(double start) {     // same name as the class, and NO return type
+        balance = start;
+    }
+};
+
+int main() {
+    Account a(100);             // creating a runs the constructor with start = 100
+}</script>
+    <p>Three ways to spot a constructor: it has the <b>same name as the class</b>, it has <b>no return type</b> (not even <code>void</code>), and you never call it yourself. It runs once, automatically, on the line that creates the object.</p>
+
+    <p><b>Who can use what?</b> This is a common spoken question.</p>
+    <div class="tbl-wrap"><table class="tbl who">
+      <thead><tr><th>Label</th><th>The class's own functions</th><th>Child classes</th><th>Everyone else (<code>main</code>)</th></tr></thead>
+      <tbody>
+        <tr><td class="big">public:</td><td class="y">Yes</td><td class="y">Yes</td><td class="y">Yes</td></tr>
+        <tr><td class="big">protected:</td><td class="y">Yes</td><td class="y">Yes</td><td class="n">No</td></tr>
+        <tr><td class="big">private:</td><td class="y">Yes</td><td class="n">No</td><td class="n">No</td></tr>
+      </tbody>
+    </table></div>
+    <p class="say">"Public members can be used from anywhere. Private members can only be used by the class's own functions. Protected is like private, except child classes can use it too. I keep the data private and make the functions public, so the class controls how its own data changes."</p>
+
+    <div class="checkme">
+      <span class="c-lbl">Check yourself</span>
+      <p class="cq">1. One line in this program won't compile. Which one, and why?</p>
+<script type="text/plain" data-code="cpp">class Car {
+    int speed;
+
+public:
+    void setSpeed(int s) {
+        speed = s;
+    }
+    int getSpeed() {
+        return speed;
+    }
+};
+
+int main() {
+    Car c;
+    c.setSpeed(30);
+    c.speed = 50;
+    cout << c.getSpeed();
+}</script>
+      <details class="reveal"><summary>Reveal answer</summary><div class="body"><p><code>c.speed = 50;</code>. There's no label above <code>speed</code>, and in a <code>class</code> everything is <b>private by default</b>. <code>main</code> is outside the class, so it can't touch it. <code>c.setSpeed(30)</code> is fine because <code>setSpeed</code> is under <code>public:</code>.</p></div></details>
+      <p class="cq">2. Say it: why make the data private at all?</p>
+      <details class="reveal"><summary>Reveal answer</summary><div class="body"><p>So the only way to change it is through the class's own functions, and those functions can check the value first. <code>deposit()</code> rejecting a negative amount is the example to give.</p></div></details>
+      <p class="cq">3. Say it: how do you recognise a constructor, and when does it run?</p>
+      <details class="reveal"><summary>Reveal answer</summary><div class="body"><p>Same name as the class, no return type. It runs automatically when an object is created, for example on the line <code>Account a(100);</code>.</p></div></details>
+    </div>
+  </div>
+  <p><b>The full version.</b> The same four steps in one program, with the real name. This is the one to learn by heart.</p>
   <script type="text/plain" data-code="cpp">#include <iostream>
 #include <string>
 using namespace std;
@@ -1088,6 +1306,96 @@ Tom says Meow</pre></div>
 <section id="coding" class="sec">
   <h2 class="sec-h"><span class="gate">4</span>Live coding</h2>
   <p class="sec-sub">Every answer has the same shape: <b>a function above <code>main</code> that takes the input and returns the answer.</b> Write it in <code>practice.cpp</code> (or on paper) first, then open the solution to check.</p>
+
+  <div class="basics">
+    <span class="b-lbl">Start here: the basics</span>
+    <p><b>Every coding answer is one function with one loop in it.</b> If you can read these two things, you can read every solution on this page.</p>
+
+    <h4><span class="st">1</span>Read a function one piece at a time</h4>
+<script type="text/plain" data-code="cpp">int sumVector(const vector<int>& v) {
+    int total = 0;
+    // ... work it out ...
+    return total;
+}</script>
+    <div class="tbl-wrap"><table class="tbl kw">
+      <thead><tr><th>Piece</th><th>It means</th></tr></thead>
+      <tbody>
+        <tr><td class="big">int</td><td><b>What comes back.</b> This function hands back a whole number. Use <code>bool</code> for yes/no answers, <code>string</code> for text, <code>void</code> for nothing.</td></tr>
+        <tr><td class="big">sumVector</td><td><b>The name.</b> You choose it, unless the interviewer gives you one.</td></tr>
+        <tr><td class="big">(const vector&lt;int&gt;&amp; v)</td><td><b>What goes in.</b> A list of ints, which the function calls <code>v</code>. The <code>const</code> and <code>&amp;</code> mean "read it, don't copy it" (see <a href="#t-pass">2.2</a>).</td></tr>
+        <tr><td class="big">return total;</td><td><b>Hand the answer back.</b> Its type has to match the first word of the function.</td></tr>
+      </tbody>
+    </table></div>
+    <p>The function goes <b>above</b> <code>main</code>. Inside <code>main</code> you call it and print what comes back: <code>cout &lt;&lt; sumVector(nums);</code>. Return the answer from the function. Don't <code>cout</code> inside it unless you're asked to.</p>
+
+    <h4><span class="st">2</span>Read a <code>for</code> loop one piece at a time</h4>
+<script type="text/plain" data-code="cpp">for (int i = 0; i < v.size(); i++) {
+    // v[i] is the element you're looking at right now
+}</script>
+    <div class="tbl-wrap"><table class="tbl kw">
+      <thead><tr><th>Piece</th><th>It means</th></tr></thead>
+      <tbody>
+        <tr><td class="big">int i = 0</td><td>Start at position 0. The first element is <code>v[0]</code>, not <code>v[1]</code>.</td></tr>
+        <tr><td class="big">i &lt; v.size()</td><td>Keep going while <code>i</code> is a real position. With 4 elements the positions are 0, 1, 2, 3, so it has to be <code>&lt;</code> and never <code>&lt;=</code>.</td></tr>
+        <tr><td class="big">i++</td><td>After each lap, move to the next position.</td></tr>
+      </tbody>
+    </table></div>
+    <p>A string works exactly the same way: <code>s.size()</code> is how many characters it has, and <code>s[i]</code> is one character.</p>
+
+    <h4><span class="st">3</span>Four loop shapes solve nearly everything</h4>
+    <p>The loop line is the same every time. What changes is what you set up <b>before</b> it and what you do <b>inside</b> it.</p>
+    <div class="shapes">
+      <div>
+        <div class="jt-cap">1 · Add up or count</div>
+<script type="text/plain" data-code="cpp">int total = 0;
+for (int i = 0; i < v.size(); i++) {
+    total += v[i];
+}
+return total;</script>
+        <p>Sum, average, count the vowels.</p>
+      </div>
+      <div>
+        <div class="jt-cap">2 · Find the best</div>
+<script type="text/plain" data-code="cpp">int best = v[0];
+for (int i = 0; i < v.size(); i++) {
+    if (v[i] > best) best = v[i];
+}
+return best;</script>
+        <p>Biggest, smallest.</p>
+      </div>
+      <div>
+        <div class="jt-cap">3 · Build an answer</div>
+<script type="text/plain" data-code="cpp">string result = "";
+for (int i = 0; i < s.size(); i++) {
+    result += s[i];
+}
+return result;</script>
+        <p>Reverse a string, decimal to binary.</p>
+      </div>
+      <div>
+        <div class="jt-cap">4 · Check, and stop early</div>
+<script type="text/plain" data-code="cpp">for (int i = 0; i < v.size(); i++) {
+    if (v[i] < 0) return false;
+}
+return true;</script>
+        <p>Palindrome, prime, "are they all positive?". One bad element is enough for <code>false</code>, so <code>return true;</code> goes <b>after</b> the loop.</p>
+      </div>
+    </div>
+    <p>When a question lands, ask yourself <b>"which of the four is this?"</b> and say it out loud: "I'll loop through once and build up a new string." That sentence is your plan, and it's worth marks before you type anything.</p>
+
+    <h4><span class="st">4</span>What order to practise in</h4>
+    <p><a href="#drill0">Drill 0</a> (add up, find the best) → <a href="#p1">Problem 1</a> (build an answer) → <a href="#p4">Problem 4</a> (check and stop early) → <a href="#p3">Problem 3</a> (counting with a map) → <a href="#p2">Problem 2</a>. For each one: read the solution, close it, write it yourself, then explain it out loud as if someone were listening.</p>
+
+    <div class="checkme">
+      <span class="c-lbl">Check yourself</span>
+      <p class="cq">1. "Write a function that counts how many numbers in a vector are even." What's the first line of the function, and which loop shape is it?</p>
+      <details class="reveal"><summary>Reveal answer</summary><div class="body"><p><code>int countEven(const vector&lt;int&gt;&amp; v) {</code>. It returns a count, so <code>int</code>. It's the <b>add up or count</b> shape: <code>int count = 0;</code> before the loop, <code>if (v[i] % 2 == 0) count++;</code> inside, <code>return count;</code> after.</p></div></details>
+      <p class="cq">2. A string <code>s</code> holds <code>"hello"</code>. What is <code>s.size()</code>, what is <code>s[0]</code>, and what is the position of the last letter?</p>
+      <details class="reveal"><summary>Reveal answer</summary><div class="body"><p><code>s.size()</code> is 5. <code>s[0]</code> is <code>'h'</code>. The last letter is at position 4, which is <code>s.size() - 1</code>. <code>s[5]</code> is past the end: a bug.</p></div></details>
+      <p class="cq">3. Why does a "check, and stop early" function put <code>return true;</code> after the loop and not inside it?</p>
+      <details class="reveal"><summary>Reveal answer</summary><div class="body"><p>Because one good element doesn't prove anything. You can only say "true" once the loop has looked at <b>every</b> element without finding a problem. One bad element is enough to say "false" straight away.</p></div></details>
+    </div>
+  </div>
 
   <div class="local">
     <b>C++ is now installed on your laptop</b>
@@ -1549,6 +1857,84 @@ b->show();</script>
 <section id="sql" class="sec">
   <h2 class="sec-h"><span class="gate">6</span>SQL</h2>
   <p class="sec-sub">A 15-minute crash course. Imagine a table <b>Employees</b>(emp_id, name, department, salary).</p>
+
+  <div class="basics">
+    <span class="b-lbl">Start here: the basics</span>
+    <p><b>Never written SQL? Ten minutes here is enough for the screening.</b> SQL is how you ask a database a question. It reads almost like an English sentence.</p>
+
+    <h4><span class="st">1</span>A table is a spreadsheet with a name</h4>
+    <p>This is the <b>Employees</b> table. Each row is one person and each column is one fact about them. (The examples below use just these five rows.)</p>
+    <div class="res wide"><table class="tbl mini-t" aria-label="Employees table, five rows">
+      <thead><tr><th>emp_id</th><th>name</th><th>department</th><th>salary</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Aisha</td><td>IT</td><td>52000</td></tr>
+        <tr><td>2</td><td>Ben</td><td>IT</td><td>48000</td></tr>
+        <tr><td>7</td><td>Grace</td><td>Sales</td><td>39000</td></tr>
+        <tr><td>8</td><td>Hugo</td><td>Sales</td><td>42000</td></tr>
+        <tr><td>12</td><td>Leo</td><td>Finance</td><td>65000</td></tr>
+      </tbody>
+    </table></div>
+
+    <h4><span class="st">2</span>A query answers three questions</h4>
+<script type="text/plain" data-code="sql">-- which COLUMNS do I want?
+SELECT name, salary
+-- from which TABLE?
+FROM Employees
+-- which ROWS? (no WHERE = every row)
+WHERE department = 'IT';</script>
+    <div class="res"><div class="jt-cap">Result</div><table class="tbl mini-t" aria-label="Result: Aisha 52000, Ben 48000">
+      <thead><tr><th>name</th><th>salary</th></tr></thead>
+      <tbody><tr><td>Aisha</td><td>52000</td></tr><tr><td>Ben</td><td>48000</td></tr></tbody>
+    </table></div>
+    <p>Three small rules: text goes in <b>single quotes</b> (<code>'IT'</code>) and numbers don't (<code>salary &gt; 45000</code>). "Equals" is <b>one</b> equals sign, not two like C++. <code>SELECT *</code> means "all the columns".</p>
+
+    <h4><span class="st">3</span>Sort the result, then cut it short</h4>
+<script type="text/plain" data-code="sql">SELECT name, salary
+FROM Employees
+-- DESC = biggest first
+-- (leave it out for smallest first)
+ORDER BY salary DESC
+-- keep only the first 2 rows
+LIMIT 2;</script>
+    <div class="res"><div class="jt-cap">Result</div><table class="tbl mini-t" aria-label="Result: Leo 65000, Aisha 52000">
+      <thead><tr><th>name</th><th>salary</th></tr></thead>
+      <tbody><tr><td>Leo</td><td>65000</td></tr><tr><td>Aisha</td><td>52000</td></tr></tbody>
+    </table></div>
+    <p>"Highest paid", "top 3", "most recent": that's always <code>ORDER BY … DESC</code> plus <code>LIMIT</code>.</p>
+
+    <h4><span class="st">4</span><code>GROUP BY</code>: one answer per pile</h4>
+<script type="text/plain" data-code="sql">SELECT department, COUNT(*)
+FROM Employees
+GROUP BY department;</script>
+    <div class="res"><div class="jt-cap">Result</div><table class="tbl mini-t" aria-label="Result: Finance 1, IT 2, Sales 2">
+      <thead><tr><th>department</th><th>COUNT(*)</th></tr></thead>
+      <tbody><tr><td>Finance</td><td>1</td></tr><tr><td>IT</td><td>2</td></tr><tr><td>Sales</td><td>2</td></tr></tbody>
+    </table></div>
+    <p><code>GROUP BY department</code> sorts the rows into piles, one pile per department. <code>COUNT(*)</code> then counts the rows in each pile, so you get <b>one row per pile</b>. The other pile functions are <code>SUM</code>, <code>AVG</code>, <code>MAX</code> and <code>MIN</code>. Whenever a question says "per department" or "for each", it's <code>GROUP BY</code>.</p>
+    <p><b><code>HAVING</code> is <code>WHERE</code> for piles.</b> Add <code>HAVING COUNT(*) &gt; 1</code> as a last line and only IT and Sales are left. <code>WHERE</code> can't do that, because it runs before the piles exist.</p>
+
+    <p class="say">"SELECT picks the columns, FROM names the table and WHERE filters the rows. GROUP BY puts rows into groups, and HAVING filters those groups. ORDER BY sorts the result."</p>
+
+    <div class="checkme">
+      <span class="c-lbl">Check yourself</span>
+      <p class="cq">1. Write it: the names of everyone earning more than 45000, highest paid first.</p>
+      <details class="reveal"><summary>Reveal answer</summary><div class="body">
+<script type="text/plain" data-code="sql">SELECT name
+FROM Employees
+WHERE salary > 45000
+ORDER BY salary DESC;</script>
+        <p>On the five rows above that gives Leo, Aisha, Ben.</p></div></details>
+      <p class="cq">2. Write it: the average salary in each department.</p>
+      <details class="reveal"><summary>Reveal answer</summary><div class="body">
+<script type="text/plain" data-code="sql">SELECT department, AVG(salary)
+FROM Employees
+GROUP BY department;</script>
+        <p>"In each" is the clue for <code>GROUP BY</code>.</p></div></details>
+      <p class="cq">3. Say it: you only want departments whose average salary is above 50000. Is that <code>WHERE</code> or <code>HAVING</code>, and why?</p>
+      <details class="reveal"><summary>Reveal answer</summary><div class="body"><p><code>HAVING AVG(salary) &gt; 50000</code>. The average belongs to a whole group, and <code>HAVING</code> is the one that filters groups. <code>WHERE</code> only looks at one row at a time.</p></div></details>
+    </div>
+  </div>
+  <p><b>Now the interview version.</b> Two terms to know, the clause order, and the five queries worth learning.</p>
 
   <div class="compare">
     <div><h4>Primary key</h4><p>A column that uniquely identifies each row (<code>emp_id</code>). It can't be null or repeated.</p></div>
