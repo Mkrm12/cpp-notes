@@ -1,7 +1,7 @@
 // Offline support: keeps a copy of the pages, fonts and highlighter so the notes open with no connection.
-const VERSION = 'v3';
+const VERSION = 'v4';
 const CACHE = 'cpp-notes-' + VERSION;
-const CORE = ['./', 'index.html', 'practice.html', 'basics.html', 'mock1.html', 'mock2.html', 'mock.css', 'mock.js', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png'];
+const CORE = ['./', 'index.html', 'practice.html', 'basics.html', 'zero.html', 'mock1.html', 'mock2.html', 'mock.css', 'mock.js', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png'];
 const CDN = [
   'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-asm.js'
